@@ -26,9 +26,9 @@ const me = async (req, res) => {
 
 const register = async (req, res) => {
     try {
-        const { fullName, email, password } = req.body;
-        console.log("Registering user:", { fullName, email, password });
-        if (!fullName || !email || !password) {
+        const { username, email, password } = req.body;
+        console.log("Registering user:", { username, email, password });
+        if (!username || !email || !password) {
             return res.status(400).json({ error: "All fields are required" });
           }
 
@@ -42,7 +42,7 @@ const register = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Create new user
-        const user = await User.create({ name:fullName, email, password: hashedPassword });
+        const user = await User.create({ name:username, email, password: hashedPassword });
 
         res.status(201).json({ message: "User registered successfully", user });
     } catch (error) {
@@ -63,7 +63,14 @@ const login = async (req, res) => {
             return res.status(400).json({ message: "Invalid credentials" });
         }
 
-        // Validate password
+   console.log("Password received:", `"${password}"`);
+console.log("Password length:", password.length);
+console.log("Password chars:", [...password].map(c => c.charCodeAt(0)));
+
+console.log("Stored hash:", `"${user.dataValues.password}"`);
+console.log("Hash length:", user.dataValues.password.length);
+
+
         const isMatch = await bcrypt.compare(password, user.dataValues.password);
         if (!isMatch) {
             return res.status(400).json({ message: "Invalid credentials" });
