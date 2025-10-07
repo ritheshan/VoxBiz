@@ -111,7 +111,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
           }
         });
         
-        response = await axios.post("http://localhost:8000/api/database/create", formPayload);
+        response = await axios.post("http://localhost:3000/api/database/create", formPayload);
       } else {
         // Excel upload
         const formPayload = new FormData();
