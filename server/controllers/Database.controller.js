@@ -147,7 +147,7 @@ export const connectDatabase = async (req, res) => {
     // Validate the `type` field and set dialect
     let dialect;
     if (type) {
-      const supportedTypes = ["postgres", "mysql"];
+      const supportedTypes = ["postgresql", "mysql"];
       if (!supportedTypes.includes(type.toLowerCase())) {
         return res.status(400).json({ error: "Unsupported database type. Only 'postgres' and 'mysql' are supported." });
       }
@@ -198,7 +198,7 @@ export const connectDatabase = async (req, res) => {
       databaseName: finalName,
       connectionURI,
       role: "read-only",
-      dbType: dialect === "postgres" ? "PostgreSQL" : "MySQL"
+      dbType: dialect === "postgresql" ? "PostgreSQL" : "MySQL"
     });
 
     res.status(201).json({
