@@ -43,7 +43,7 @@ const app = express();
 // const router = express.Router();
 
 app.use(cors({
-  origin: "*", // ✅ Your frontend origin
+  origin: "https://voxbiz.onrender.com", // ✅ Your frontend origin
   credentials: true                // ✅ Required to send/receive cookies
 }));
 app.use(express.json()); // Parse JSON bodies

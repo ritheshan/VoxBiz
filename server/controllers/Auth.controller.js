@@ -63,13 +63,6 @@ const login = async (req, res) => {
             return res.status(400).json({ message: "Invalid credentials" });
         }
 
-   console.log("Password received:", `"${password}"`);
-console.log("Password length:", password.length);
-console.log("Password chars:", [...password].map(c => c.charCodeAt(0)));
-
-console.log("Stored hash:", `"${user.dataValues.password}"`);
-console.log("Hash length:", user.dataValues.password.length);
-
 
         const isMatch = await bcrypt.compare(password, user.dataValues.password);
         if (!isMatch) {
