@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import Loader from "./ui/Loader";
 import axios from "axios";
+import { API_BASE_URL } from "../lib/api";
 import { SiPostgresql, } from 'react-icons/si';
 import { GrMysql } from 'react-icons/gr';
 const ConnectDatabaseModal = ({ darkMode, onClose }) => {
@@ -52,7 +53,7 @@ const ConnectDatabaseModal = ({ darkMode, onClose }) => {
     }
 
     try {
-      const response = await axios.post("http://localhost:3000/api/database/connect", dataToSubmit, {
+  const response = await axios.post(`${API_BASE_URL}/api/database/connect`, dataToSubmit, {
         withCredentials: true
       });
 

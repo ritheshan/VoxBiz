@@ -53,6 +53,7 @@ import Navbar from '../components/Navbar';
 import { useLocation } from 'react-router-dom';
 import EmailDataModal from '../components/EmailDataModal';
 import ScheduleEmailModal from '../components/ScheduleEmail';
+import { API_BASE_URL } from '../lib/api';
 
 function createData(id, name, calories, fat, carbs, protein) {
   return { id, name, calories, fat, carbs, protein };
@@ -417,7 +418,7 @@ const [customColumns, setCustomColumns] = useState([]);
       }
       
       // Call the backend API to delete history
-      const response = await fetch(`http://localhost:3000/api/databases/${databaseId}/history`, {
+  const response = await fetch(`${API_BASE_URL}/api/databases/${databaseId}/history`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json'
@@ -601,7 +602,7 @@ const [customColumns, setCustomColumns] = useState([]);
           return;
         }
         
-        const response = await fetch(`http://localhost:3000/api/databases/${databaseId}/history`, {
+  const response = await fetch(`${API_BASE_URL}/api/databases/${databaseId}/history`, {
           method: 'GET',
           credentials: 'include', // Include cookies for authentication
           headers: {
@@ -890,7 +891,7 @@ const processVoiceCommand = async () => {
   setLoading(true);
   
   try {
-    const response = await fetch(`http://localhost:3000/api/query/refine`, {
+  const response = await fetch(`${API_BASE_URL}/api/query/refine`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -948,7 +949,7 @@ const handleCustomQuerySubmit = async () => {
   setLoading(true);
   
   try {
-    const response = await fetch(`http://localhost:3000/api/query/custom`, {
+  const response = await fetch(`${API_BASE_URL}/api/query/custom`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -1017,7 +1018,7 @@ const handleRefinementSubmit = async () => {
   setNotExpectedDialogOpen(false);
   
   try {
-    const response = await fetch(`http://localhost:3000/api/query/refine`, {
+  const response = await fetch(`${API_BASE_URL}/api/query/refine`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

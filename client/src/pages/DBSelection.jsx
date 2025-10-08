@@ -8,6 +8,7 @@ import Loader from '../components/ui/Loader';
 import DbPreviewOption from '../components/ui/Db-preview';
 import { SiPostgresql } from 'react-icons/si';
 import { GrMysql } from 'react-icons/gr';
+import { API_BASE_URL } from '../lib/api';
 
 const DatabaseDashboard = () => {
 
@@ -44,7 +45,7 @@ const DatabaseDashboard = () => {
     setError(null);
 
     try {
-      const response = await fetch('http://localhost:3000/api/database/list', {
+  const response = await fetch(`${API_BASE_URL}/api/database/list`, {
         method: 'GET',
         credentials: 'include', // ✅ this is critical for cookies to be sent
       });
@@ -210,7 +211,7 @@ const DatabaseDashboard = () => {
       return;
     }
     // Make an API call to the backend database service
-    fetch(`http://localhost:3000/api/query/process/${dbId}`, {
+  fetch(`${API_BASE_URL}/api/query/process/${dbId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -261,7 +262,7 @@ const DatabaseDashboard = () => {
       console.log('Selected DB ID:', dbId);
 
       // Fetch database info from the backend
-      const response = await fetch(`http://localhost:3000/api/database/db-info/${dbId}`);
+  const response = await fetch(`${API_BASE_URL}/api/database/db-info/${dbId}`);
 
       if (!response.ok) {
         throw new Error('Failed to fetch database information');

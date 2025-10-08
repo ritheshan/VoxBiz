@@ -3,6 +3,7 @@ import { useDropzone } from "react-dropzone";
 import DocButton from "./ui/Document";
 import Loader from "./ui/Loader";
 import axios from "axios";
+import { API_BASE_URL } from "../lib/api";
 
 const CreateDatabaseModal = ({ darkMode, onClose }) => {
   const [step, setStep] = useState("initial");
@@ -111,7 +112,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
           }
         });
         
-        response = await axios.post("http://localhost:3000/api/database/create", formPayload);
+  response = await axios.post(`${API_BASE_URL}/api/database/create`, formPayload);
       } else {
         // Excel upload
         const formPayload = new FormData();
@@ -123,7 +124,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
           formPayload.append("textInstructions", textInput);
         }
         
-        response = await axios.post("http://localhost:3000/api/database/excel", formPayload);
+  response = await axios.post(`${API_BASE_URL}/api/database/excel`, formPayload);
       }
       
       if (response.data && response.data.schema) {
@@ -141,7 +142,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
     setStep("loading");
     
     try {
-      await axios.post("http://localhost:3000/api/database/confirm");
+  await axios.post(`${API_BASE_URL}/api/database/confirm`);
       setStep("success");
     } catch (error) {
       console.error("Error confirming schema:", error);

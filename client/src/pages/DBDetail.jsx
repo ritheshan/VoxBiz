@@ -6,6 +6,7 @@ import Navbar from '../components/Navbar';
 import VoiceSearchModal from '../components/VoiceSearchModal';
 import { useLocation } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../lib/api';
 
 const DatabaseDetailsPage = ( )=> {
   const navigate = useNavigate();
@@ -186,7 +187,7 @@ const DatabaseDetailsPage = ( )=> {
       return;
     }
   
-    fetch(`http://localhost:3000/api/query/process/${dbId}`, {
+  fetch(`${API_BASE_URL}/api/query/process/${dbId}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

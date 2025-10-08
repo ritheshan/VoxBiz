@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { FaMicrophone, FaChartBar, FaLanguage, FaRobot, FaDatabase, FaEye, FaChevronLeft, FaChevronRight , FaPlay } from 'react-icons/fa';
 
 import { useNavigate } from 'react-router-dom';
+import { API_BASE_URL } from '../lib/api';
 
 // import CTASection from '../components/CTASection';
 // import QuerySection from '../components/QueryAnimation';
@@ -64,7 +65,7 @@ function HeroSection() {
 
   const handleGetStarted = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/auth/me', {
+  const res = await fetch(`${API_BASE_URL}/api/auth/me`, {
         method: 'GET',
         credentials: 'include',
       });

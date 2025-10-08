@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
+import { API_BASE_URL } from '../../lib/api';
 
 export const DbPreviewOption = ({ dbId, dbName, darkMode }) => {
   const [isHovering, setIsHovering] = useState(false);
@@ -16,7 +17,7 @@ export const DbPreviewOption = ({ dbId, dbName, darkMode }) => {
     
     try {
       // Modified to fetch the correct endpoint and match your data structure
-      const response = await fetch(`http://localhost:3000/api/database/natural-descriptions`, {
+  const response = await fetch(`${API_BASE_URL}/api/database/natural-descriptions`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`
         },

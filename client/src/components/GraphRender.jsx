@@ -5,6 +5,7 @@ import Navbar from './Navbar';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, ZAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, AreaChart, Area, PieChart, Pie, Cell, LabelList, ScatterChart,
   Scatter } from "recharts";
 import { useLocation } from "react-router-dom";
+import { API_BASE_URL } from '../lib/api';
 const GEMINI_API_KEY = import.meta.env.VITE_GEMINI_API_KEY;
 
 // Sample data for query history (will be replaced with actual data from backend)
@@ -23,9 +24,6 @@ const COLOR_PALETTES = [
   { name: "Earth", colors: ['#8d6e63', '#78909c', '#a1887f', '#bcaaa4', '#d7ccc8'] },
   { name: "Dark", colors: ['#424242', '#616161', '#757575', '#9e9e9e', '#bdbdbd'] }
 ];
-
-// API base URL - make sure this is defined
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
 const Graphrender = () => {
   const location = useLocation();

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { API_BASE_URL } from '../lib/api';
 
 const ForgotPassword = ({ theme }) => {
   const [email, setEmail] = useState('');
@@ -7,7 +8,7 @@ const ForgotPassword = ({ theme }) => {
   const [step, setStep] = useState(1);
 
   const handleSendCode = async () => {
-    const response = await fetch('http://localhost:3000/api/auth/send-reset-code', {
+  const response = await fetch(`${API_BASE_URL}/api/auth/send-reset-code`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email }),
@@ -21,7 +22,7 @@ const ForgotPassword = ({ theme }) => {
   };
 
   const handleVerifyCode = async () => {
-    const response = await fetch('http://localhost:3000/api/auth/verify', {
+  const response = await fetch(`${API_BASE_URL}/api/auth/verify`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, code }),
@@ -35,7 +36,7 @@ const ForgotPassword = ({ theme }) => {
   };
 
   const handleResetPassword = async () => {
-    const response = await fetch('http://localhost:3000/api/auth/reset-password', {
+  const response = await fetch(`${API_BASE_URL}/api/auth/reset-password`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, code, newPassword }),

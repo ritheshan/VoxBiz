@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import ReactMarkdown from "react-markdown";
+import { API_BASE_URL } from '../lib/api';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, LineChart, Line, PieChart, Pie, Cell } from 'recharts';
 
 const ChatBox = ({ onClose, theme = 'light' }) => {
@@ -109,7 +110,7 @@ If you don't understand a query or need more information, ask clarifying questio
     }
   
     try {
-      const response = await axios.post("http://localhost:3000/api/business-chat", {
+  const response = await axios.post(`${API_BASE_URL}/api/business-chat`, {
         message: userMessage,
         systemPrompt: SYSTEM_PROMPT,
         currentVisualization: visualizationType,

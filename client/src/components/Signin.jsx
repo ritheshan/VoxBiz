@@ -1,6 +1,7 @@
 import React, { useState, useEffect, use } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../context/AuthContext";  // Adjust path if needed
+import { API_BASE_URL } from '../lib/api';
 
 
 
@@ -176,7 +177,7 @@ const Signin = () => {
 
   const handleGoogleSignIn = async () => {
     try {
-      const res = await fetch('http://localhost:3000/api/auth/google-url');
+  const res = await fetch(`${API_BASE_URL}/api/auth/google-url`);
       const data = await res.json();
       if (data.url) {
         window.location.href = data.url;
