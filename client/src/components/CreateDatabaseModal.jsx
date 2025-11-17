@@ -51,10 +51,10 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
     if (e && e.preventDefault) {
       e.preventDefault();
     }
-    
+
     // Clear any existing errors
     setError("");
-    
+
     // Continue with the form submission logic
     setStep("voice");
   };
@@ -64,17 +64,17 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       audioChunksRef.current = [];
       const mediaRecorder = new MediaRecorder(stream);
-      
+
       mediaRecorder.ondataavailable = (event) => {
         audioChunksRef.current.push(event.data);
       };
-      
+
       mediaRecorder.onstop = async () => {
         const audioBlob = new Blob(audioChunksRef.current, { type: 'audio/wav' });
         // Send the audio to backend or process it
         submitVoiceOrText(audioBlob);
       };
-      
+
       mediaRecorderRef.current = mediaRecorder;
       mediaRecorder.start();
       setIsRecording(true);
@@ -93,16 +93,16 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
 
   const submitVoiceOrText = async (audioBlob) => {
     setStep("loading");
-    
+
     try {
       let response;
-      
+
       if (choice === "postgres") {
         const payload = {
           ...formData,
           instructions: inputType === "voice" ? "audio_data" : textInput
         };
-        
+
         const formPayload = new FormData();
         Object.keys(payload).forEach(key => {
           if (key === "instructions" && inputType === "voice") {
@@ -111,8 +111,9 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
             formPayload.append(key, payload[key]);
           }
         });
-        
-  response = await axios.post(`${API_BASE_URL}/api/database/create`, formPayload);
+
+        response = await axios.post(`${API_BASE_URL}/api/database/create`, formPayload, { withCredentials: true }
+        );
       } else {
         // Excel upload
         const formPayload = new FormData();
@@ -123,10 +124,11 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
         } else {
           formPayload.append("textInstructions", textInput);
         }
-        
-  response = await axios.post(`${API_BASE_URL}/api/database/excel`, formPayload);
+
+        response = await axios.post(`${API_BASE_URL}/api/database/excel`, formPayload, { withCredentials: true }
+        );
       }
-      
+
       if (response.data && response.data.schema) {
         setSchema(response.data.schema);
         setStep("schema");
@@ -137,12 +139,13 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
       setStep(choice === "postgres" ? "postgres" : "excel");
     }
   };
+  
 
   const confirmSchema = async () => {
     setStep("loading");
-    
+
     try {
-  await axios.post(`${API_BASE_URL}/api/database/confirm`);
+      await axios.post(`${API_BASE_URL}/api/database/confirm`);
       setStep("success");
     } catch (error) {
       console.error("Error confirming schema:", error);
@@ -158,12 +161,12 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
   const submitSchemaEdit = async (e) => {
     e.preventDefault();
     setStep("loading");
-    
+
     try {
       await axios.post("http://localhost:8000/api/database/edit", {
         instructions: inputType === "voice" ? "audio_data" : textInput
       });
-      
+
       // Fetch updated schema
       const response = await axios.get("http://localhost:8000/api/database/schema");
       setSchema(response.data.schema);
@@ -261,7 +264,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
               <p className="mb-2">Please upload your data file and we'll create a database from it.</p>
               <p className="text-sm">After upload, you'll receive database credentials that you can access in the database details page.</p>
             </div>
-            
+
             <div {...getRootProps()} className={`border-2 border-dashed rounded-lg p-6 mb-4 text-center cursor-pointer ${darkMode ? 'border-gray-600 hover:border-gray-500' : 'border-gray-300 hover:border-gray-400'}`}>
               <input {...getInputProps()} />
               {file ? (
@@ -275,7 +278,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                 </div>
               )}
             </div>
-            
+
             {file && (
               <button
                 onClick={() => {
@@ -308,7 +311,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                   className={`w-full px-3 py-2 rounded-md ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'} border`}
                 />
               </div>
-              
+
               {choice === "postgres" && (
                 <>
                   <div>
@@ -348,7 +351,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                 </>
               )}
             </div>
-            
+
             <button
               type="submit"
               className={`w-full py-2 rounded-lg ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
@@ -370,22 +373,21 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                   <li>Any specific requirements for your database schema</li>
                 </ul>
               </p>
-              
+
               <div className="flex justify-center space-x-4 mb-4">
                 <button
                   onClick={() => {
                     setError(""); // Clear any existing errors
                     setInputType("voice");
                   }}
-                  className={`px-4 py-2 rounded-lg ${
-                    inputType === "voice"
-                      ? darkMode
-                        ? "bg-blue-600"
-                        : "bg-blue-500"
-                      : darkMode
+                  className={`px-4 py-2 rounded-lg ${inputType === "voice"
+                    ? darkMode
+                      ? "bg-blue-600"
+                      : "bg-blue-500"
+                    : darkMode
                       ? "bg-gray-700"
                       : "bg-gray-200"
-                  }`}
+                    }`}
                 >
                   Voice Input
                 </button>
@@ -394,20 +396,19 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                     setError(""); // Clear any existing errors
                     setInputType("text");
                   }}
-                  className={`px-4 py-2 rounded-lg ${
-                    inputType === "text"
-                      ? darkMode
-                        ? "bg-blue-600"
-                        : "bg-blue-500"
-                      : darkMode
+                  className={`px-4 py-2 rounded-lg ${inputType === "text"
+                    ? darkMode
+                      ? "bg-blue-600"
+                      : "bg-blue-500"
+                    : darkMode
                       ? "bg-gray-700"
                       : "bg-gray-200"
-                  }`}
+                    }`}
                 >
                   Text Input
                 </button>
               </div>
-              
+
               {inputType === "voice" ? (
                 <div className="flex justify-center mb-4">
                   <button
@@ -415,8 +416,8 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                       setError(""); // Clear any existing errors
                       isRecording ? stopRecording() : startRecording();
                     }}
-                    className={`w-20 h-20 rounded-full flex items-center justify-center ${isRecording 
-                      ? (darkMode ? 'bg-red-600' : 'bg-red-500') 
+                    className={`w-20 h-20 rounded-full flex items-center justify-center ${isRecording
+                      ? (darkMode ? 'bg-red-600' : 'bg-red-500')
                       : (darkMode ? 'bg-blue-600' : 'bg-blue-500')}`}
                   >
                     {isRecording ? (
@@ -486,7 +487,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                 </tbody>
               </table>
             </div>
-            
+
             <div className="flex space-x-4 justify-end">
               <button
                 onClick={() => {
@@ -514,15 +515,15 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
           <div>
             <h3 className="font-bold mb-4">Edit Schema</h3>
             <p className="mb-4">Please provide your feedback or changes needed to the schema:</p>
-            
+
             <div className="flex space-x-4 mb-4">
               <button
                 onClick={() => {
                   setError(""); // Clear any existing errors
                   setInputType("voice");
                 }}
-                className={`px-4 py-2 rounded-lg ${inputType === "voice" 
-                  ? (darkMode ? 'bg-blue-600' : 'bg-blue-500') 
+                className={`px-4 py-2 rounded-lg ${inputType === "voice"
+                  ? (darkMode ? 'bg-blue-600' : 'bg-blue-500')
                   : (darkMode ? 'bg-gray-700' : 'bg-gray-200')}`}
               >
                 Voice Input
@@ -532,14 +533,14 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                   setError(""); // Clear any existing errors
                   setInputType("text");
                 }}
-                className={`px-4 py-2 rounded-lg ${inputType === "text" 
-                  ? (darkMode ? 'bg-blue-600' : 'bg-blue-500') 
+                className={`px-4 py-2 rounded-lg ${inputType === "text"
+                  ? (darkMode ? 'bg-blue-600' : 'bg-blue-500')
                   : (darkMode ? 'bg-gray-700' : 'bg-gray-200')}`}
               >
                 Text Input
               </button>
             </div>
-            
+
             {inputType === "voice" ? (
               <div className="flex justify-center mb-4">
                 <button
@@ -547,8 +548,8 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                     setError(""); // Clear any existing errors
                     isRecording ? stopRecording() : startRecording();
                   }}
-                  className={`w-20 h-20 rounded-full flex items-center justify-center ${isRecording 
-                    ? (darkMode ? 'bg-red-600' : 'bg-red-500') 
+                  className={`w-20 h-20 rounded-full flex items-center justify-center ${isRecording
+                    ? (darkMode ? 'bg-red-600' : 'bg-red-500')
                     : (darkMode ? 'bg-blue-600' : 'bg-blue-500')}`}
                 >
                   {isRecording ? (

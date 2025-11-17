@@ -43,7 +43,7 @@ const app = express();
 // const router = express.Router();
 
 app.use(cors({
-  origin: ["https://vox-biz.vercel.app", "https://voxbiz.rithesh.tech", "http://localhost:3000"], // ✅ Your frontend origin
+  origin: ["https://voxbiz.vercel.app", "https://voxbiz.rithesh.tech", "http://localhost:3000"], // ✅ Your frontend origin
   credentials: true                // ✅ Required to send/receive cookies
 }));
 app.use(express.json()); // Parse JSON bodies
