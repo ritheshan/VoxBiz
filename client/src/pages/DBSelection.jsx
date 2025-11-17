@@ -29,7 +29,7 @@ const DatabaseDashboard = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [translations, setTranslations] = useState({
     title: 'Your Databases',
-    createButton: 'Create Tables',
+    createButton: 'Create Database',
     connectButton: 'Connect Database',
     noData: 'No databases found',
     dbName: 'Database Name',
