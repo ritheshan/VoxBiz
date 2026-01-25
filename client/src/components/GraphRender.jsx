@@ -32,7 +32,6 @@ const Graphrender = () => {
   const [graphType, setGraphType] = useState(
     "bar"
   );
-  const [darkMode, setDarkMode] = useState(true);
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [historyData, setHistoryData] = useState([]);
@@ -215,22 +214,7 @@ const clearQueryHistory = async () => {
     }));
   };
 
-  useEffect(() => {
-      // Theme from localStorage
-      const storedMode = localStorage.getItem('mode');
-      if (storedMode) {
-        setDarkMode(storedMode === 'dark');
-      }
-      const handleThemeChange = (event) => {
-        const newTheme = event.detail.theme;
-        setDarkMode(newTheme === 'dark');
-      };
-      window.addEventListener('themeChange', handleThemeChange);
-      
-      return () => {
-        window.removeEventListener('themeChange', handleThemeChange);
-      };
-    }, []);
+
   // Group queries by day for history view
   const groupedByDay = Array.isArray(historyData)
   ? historyData.reduce((acc, item) => {
@@ -255,8 +239,8 @@ const clearQueryHistory = async () => {
   });
 
   return (
-<div className={`App pt-0 px-10 pb-1 min-h-screen w-screen transition-colors duration-300 ${darkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'}`}>      
-  <Navbar darkMode={darkMode} />
+<div className="App pt-0 px-10 pb-1 min-h-screen w-screen transition-colors duration-300 bg-gray-900 text-white">      
+  <Navbar />
       {!isFullScreen && (
         <>
     
@@ -266,8 +250,8 @@ const clearQueryHistory = async () => {
             <button 
               className={`py-2 px-4 font-medium transition-colors ${
                 activeTab === "dashboard" 
-                  ? `border-b-2 border-${darkMode ? 'blue-400' : 'blue-600'} text-${darkMode ? 'blue-400' : 'blue-600'}`
-                  : `text-${darkMode ? 'gray-400' : 'gray-500'} hover:text-${darkMode ? 'gray-200' : 'gray-700'}`
+                  ? "border-b-2 border-blue-400 text-blue-400"
+                  : "text-gray-400 hover:text-gray-200"
               }`}
               onClick={() => setActiveTab("dashboard")}
             >
@@ -276,8 +260,8 @@ const clearQueryHistory = async () => {
             {/* <button 
               className={`py-2 px-4 font-medium transition-colors ${
                 activeTab === "history" 
-                  ? `border-b-2 border-${darkMode ? 'blue-400' : 'blue-600'} text-${darkMode ? 'blue-400' : 'blue-600'}`
-                  : `text-${darkMode ? 'gray-400' : 'gray-500'} hover:text-${darkMode ? 'gray-200' : 'gray-700'}`
+                  ? "border-b-2 border-blue-400 text-blue-400"
+                  : "text-gray-400 hover:text-gray-200"
               }`}
               onClick={() => setActiveTab("history")}
             >
@@ -286,8 +270,8 @@ const clearQueryHistory = async () => {
             <button 
               className={`ml-282 py-2 px-4 font-medium transition-colors ${
                 activeTab === "" 
-                  ? `border-b-2 border-${darkMode ? 'blue-400' : 'blue-600'} text-${darkMode ? 'blue-400' : 'blue-600'}`
-                  : `text-${darkMode ? 'gray-400' : 'gray-500'} hover:text-${darkMode ? 'gray-200' : 'gray-700'}`
+                  ? "border-b-2 border-blue-400 text-blue-400"
+                  : "text-gray-400 hover:text-gray-200"
               }`}
               onClick={() => setShowCustomizePanel(!showCustomizePanel)} 
             >
@@ -298,13 +282,13 @@ const clearQueryHistory = async () => {
       )}
       
       {/* Customize Panel */}
-      <div className={`fixed top-0 right-0 h-full w-80 bg-${darkMode ? 'gray-800' : 'white'} shadow-xl transform transition-transform duration-300 ease-in-out z-50 ${showCustomizePanel ? 'translate-x-0' : 'translate-x-full'}`}>
+      <div className={`fixed top-0 right-0 h-full w-80 bg-gray-800 shadow-xl transform transition-transform duration-300 ease-in-out z-50 ${showCustomizePanel ? 'translate-x-0' : 'translate-x-full'}`}>
         <div className="p-4 h-full flex flex-col">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-xl font-bold">Chart Customization</h2>
             <button 
               onClick={() => setShowCustomizePanel(false)}
-              className={`p-2 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
+              className="p-2 rounded-full hover:bg-gray-700"
             >
               <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -353,7 +337,7 @@ const clearQueryHistory = async () => {
                   <button
                     key={index}
                     onClick={() => handleColorPaletteChange(index)}
-                    className={`p-2 rounded border ${chartSettings.colorPalette === index ? 'border-blue-500' : darkMode ? 'border-gray-600' : 'border-gray-300'}`}
+                    className={`p-2 rounded border ${chartSettings.colorPalette === index ? 'border-blue-500' : 'border-gray-600'}`}
                     title={palette.name}
                   >
                     <div className="flex h-4">
@@ -373,7 +357,7 @@ const clearQueryHistory = async () => {
                   <label className="block text-sm mb-1">Start Date</label>
                   <input
                     type="date"
-                    className={`w-full p-2 rounded border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
+                    className="w-full p-2 rounded border bg-gray-700 border-gray-600"
                     onChange={(e) => handleSettingChange('dateRange', {
                       ...chartSettings.dateRange,
                       start: e.target.value
@@ -384,7 +368,7 @@ const clearQueryHistory = async () => {
                   <label className="block text-sm mb-1">End Date</label>
                   <input
                     type="date"
-                    className={`w-full p-2 rounded border ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-300'}`}
+                    className="w-full p-2 rounded border bg-gray-700 border-gray-600"
                     onChange={(e) => handleSettingChange('dateRange', {
                       ...chartSettings.dateRange,
                       end: e.target.value
@@ -395,10 +379,10 @@ const clearQueryHistory = async () => {
             </div> */}
           </div>
           
-          <div className="pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="pt-4 border-t border-gray-700">
             <button
               onClick={() => setShowCustomizePanel(false)}
-              className={`w-full py-2 px-4 rounded font-medium ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+              className="w-full py-2 px-4 rounded font-medium bg-blue-600 hover:bg-blue-700 text-white"
             >
               Apply Settings
             </button>
@@ -414,9 +398,7 @@ const clearQueryHistory = async () => {
               <select
                 value={graphType}
                 onChange={(e) => setGraphType(e.target.value)}
-                className={`w-full md:w-64 p-3 pr-10 rounded appearance-none border-b-2 border-blue-500 focus:outline-none focus:border-pink-500 transition-colors ${
-                  darkMode ? 'bg-gray-800 text-white' : 'bg-gray-100 text-gray-800'
-                }`}
+                className="w-full md:w-64 p-3 pr-10 rounded appearance-none border-b-2 border-blue-500 focus:outline-none focus:border-pink-500 transition-colors bg-gray-800 text-white"
               >
                 <option value="line">Line Chart</option>
                 <option value="area">Area Chart</option>
@@ -433,7 +415,7 @@ const clearQueryHistory = async () => {
           )}
 
           <div className={`grid ${isFullScreen ? '' : 'grid-cols-1 lg:grid-cols-3'} gap-6`}>
-            <div className={`${isFullScreen ? 'w-full h-screen' : 'lg:col-span-2'} rounded-lg shadow-lg overflow-hidden ${darkMode ? 'bg-gray-800' : 'bg-gray-100'} transition-all duration-300`}>
+            <div className={`${isFullScreen ? 'w-full h-screen' : 'lg:col-span-2'} rounded-lg shadow-lg overflow-hidden bg-gray-800 transition-all duration-300`}>
               {loading.chart ? (
                 <div className="flex items-center justify-center h-full">
                   <div className="text-center">
@@ -463,7 +445,6 @@ const clearQueryHistory = async () => {
                 <EnhancedGraphRender 
                   data={chartData} 
                   graphType={graphType} 
-                  darkMode={darkMode} 
                   isFullScreen={isFullScreen}
                   setIsFullScreen={setIsFullScreen}
                   chartSettings={chartSettings}
@@ -476,7 +457,6 @@ const clearQueryHistory = async () => {
                 <AIInsightsPanel 
                   data={chartData} 
                   graphType={graphType} 
-                  darkMode={darkMode} 
                   loading={loading.chart}
                   error={error.chart}
                 />
@@ -490,12 +470,12 @@ const clearQueryHistory = async () => {
 
 {/* History Tab */}
 {/* {activeTab === "history" && !isFullScreen && (
-  <div className={`rounded-lg shadow-lg overflow-hidden ${darkMode ? 'bg-gray-800' : 'bg-white'} p-6`}>
+  <div className="rounded-lg shadow-lg overflow-hidden bg-gray-800 p-6">
     <div className="flex justify-between items-center mb-6">
       <h2 className="text-xl font-bold">Query History</h2>
       <button 
         onClick={() => clearQueryHistory()}
-        className={`px-4 py-2 ${darkMode ? 'bg-red-600 hover:bg-red-700' : 'bg-red-500 hover:bg-red-600'} text-white rounded-md flex items-center`}
+        className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-md flex items-center"
       >
         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
@@ -541,13 +521,13 @@ const clearQueryHistory = async () => {
         ) : (
           <div className="space-y-4">
             {historyData.map((query, index) => (
-              <div key={index} className={`border-l-4 border-blue-500 pl-4 py-2 ${darkMode ? 'bg-gray-700' : 'bg-white'}`}>
+              <div key={index} className="border-l-4 border-blue-500 pl-4 py-2 bg-gray-700">
                 <div className="flex justify-between items-center mb-1">
-                  <span className={`font-semibold text-${darkMode ? 'gray-200' : 'gray-800'}`}>
+                  <span className="font-semibold text-gray-200">
                     {new Date(query.timestamp).toLocaleTimeString()}
                   </span>
                 </div>
-                <pre className={`${darkMode ? 'bg-gray-800' : 'bg-gray-100'} p-3 rounded text-sm overflow-x-auto`}>
+                <pre className="bg-gray-800 p-3 rounded text-sm overflow-x-auto">
                   {query.query}
                 </pre>
               </div>
@@ -562,12 +542,10 @@ const clearQueryHistory = async () => {
   );
 };
 
-const CustomTooltip = ({ active, payload, label, darkMode }) => {
+const CustomTooltip = ({ active, payload, label }) => {
   if (active && payload && payload.length) {
     return (
-      <div className={`p-3 rounded shadow-lg border ${
-        darkMode ? 'bg-gray-800 border-gray-700 text-gray-200' : 'bg-white border-gray-300 text-gray-800'
-      }`}>
+      <div className="p-3 rounded shadow-lg border bg-gray-800 border-gray-700 text-gray-200">
         <p className="font-medium">{label}</p>
         {payload.map((entry, index) => (
           <p key={index} style={{ color: entry.color }} className="text-sm">
@@ -580,7 +558,7 @@ const CustomTooltip = ({ active, payload, label, darkMode }) => {
   return null;
 };
 
-const EnhancedGraphRender = ({ data, graphType, darkMode, isFullScreen, setIsFullScreen, chartSettings }) => {
+const EnhancedGraphRender = ({ data, graphType, isFullScreen, setIsFullScreen, chartSettings }) => {
   // Check if data is valid and determine possible graph types
   const [error, setError] = React.useState(null);
   const [possibleGraphTypes, setPossibleGraphTypes] = React.useState([]);
@@ -661,8 +639,8 @@ const EnhancedGraphRender = ({ data, graphType, darkMode, isFullScreen, setIsFul
     }
   }, [data, graphType]);
 
-  const gridColor = darkMode ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.1)";
-  const textColor = darkMode ? "#fff" : "#333";
+  const gridColor = "rgba(255,255,255,0.1)";
+  const textColor = "#fff";
   
   // Handle undefined chartSettings gracefully
   const colorPalette = chartSettings?.colorPalette || 'default';
@@ -725,7 +703,7 @@ const EnhancedGraphRender = ({ data, graphType, darkMode, isFullScreen, setIsFul
         <h2 className="text-lg font-bold">Data Visualization</h2>
         <button 
           onClick={toggleFullScreen}
-          className={`text-${darkMode ? 'white' : 'gray-800'} hover:text-${darkMode ? 'blue-300' : 'blue-600'} transition-colors p-2 rounded-full hover:bg-${darkMode ? 'gray-700' : 'gray-200'}`}
+          className="text-white hover:text-blue-300 transition-colors p-2 rounded-full hover:bg-gray-700"
           aria-label={isFullScreen ? "Exit full screen" : "Enter full screen"}
         >
           {isFullScreen ? (
@@ -747,8 +725,8 @@ const EnhancedGraphRender = ({ data, graphType, darkMode, isFullScreen, setIsFul
               <LineChart data={transformedData}>
                 {chartSettings?.showGrid && <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />}
                 <XAxis dataKey="name" stroke={textColor} tick={{ fill: textColor }} />
-                <YAxis stroke={darkMode ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)"} tick={{ fill: textColor }} />
-                <Tooltip content={<CustomTooltip darkMode={darkMode} />} />
+                <YAxis stroke="rgba(255,255,255,0.5)" tick={{ fill: textColor }} />
+                <Tooltip content={<CustomTooltip />} />
                 {chartSettings?.showLegend && <Legend wrapperStyle={{ color: textColor }} />}
                 {dataKeys.slice(0, 3).map((key, index) => (
                   <Line 
@@ -758,8 +736,8 @@ const EnhancedGraphRender = ({ data, graphType, darkMode, isFullScreen, setIsFul
                     name={key} 
                     stroke={currentPalette[index % currentPalette.length]} 
                     strokeWidth={3} 
-                    dot={{ r: 6, strokeWidth: 2, fill: darkMode ? "#2d3748" : "#fff" }}
-                    activeDot={{ r: 8, stroke: currentPalette[index % currentPalette.length], strokeWidth: 2, fill: darkMode ? "#2d3748" : "#fff" }}
+                    dot={{ r: 6, strokeWidth: 2, fill: "#2d3748" }}
+                    activeDot={{ r: 8, stroke: currentPalette[index % currentPalette.length], strokeWidth: 2, fill: "#2d3748" }}
                   >
                     {renderDataLabels(key)}
                   </Line>
@@ -770,8 +748,8 @@ const EnhancedGraphRender = ({ data, graphType, darkMode, isFullScreen, setIsFul
               <AreaChart data={transformedData}>
                 {chartSettings?.showGrid && <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />}
                 <XAxis dataKey="name" stroke={textColor} tick={{ fill: textColor }} />
-                <YAxis stroke={darkMode ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)"} tick={{ fill: textColor }} />
-                <Tooltip content={<CustomTooltip darkMode={darkMode} />} />
+                <YAxis stroke="rgba(255,255,255,0.5)" tick={{ fill: textColor }} />
+                <Tooltip content={<CustomTooltip />} />
                 {chartSettings?.showLegend && <Legend wrapperStyle={{ color: textColor }} />}
                 {dataKeys.slice(0, 3).map((key, index) => (
                   <Area 
@@ -781,7 +759,7 @@ const EnhancedGraphRender = ({ data, graphType, darkMode, isFullScreen, setIsFul
                     name={key} 
                     stroke={currentPalette[index % currentPalette.length]} 
                     fill={`${currentPalette[index % currentPalette.length]}80`}
-                    activeDot={{ r: 8, stroke: currentPalette[index % currentPalette.length], strokeWidth: 2, fill: darkMode ? "#2d3748" : "#fff" }}
+                    activeDot={{ r: 8, stroke: currentPalette[index % currentPalette.length], strokeWidth: 2, fill: "#2d3748" }}
                   >
                     {renderDataLabels(key)}
                   </Area>
@@ -792,8 +770,8 @@ const EnhancedGraphRender = ({ data, graphType, darkMode, isFullScreen, setIsFul
               <BarChart data={transformedData}>
                 {chartSettings?.showGrid && <CartesianGrid strokeDasharray="3 3" stroke={gridColor} />}
                 <XAxis dataKey="name" stroke={textColor} tick={{ fill: textColor }} />
-                <YAxis stroke={darkMode ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)"} tick={{ fill: textColor }} />
-                <Tooltip content={<CustomTooltip darkMode={darkMode} />} />
+                <YAxis stroke="rgba(255,255,255,0.5)" tick={{ fill: textColor }} />
+                <Tooltip content={<CustomTooltip />} />
                 {chartSettings?.showLegend && <Legend wrapperStyle={{ color: textColor }} />}
                 {dataKeys.slice(0, 3).map((key, index) => (
                   <Bar 
@@ -820,7 +798,7 @@ const EnhancedGraphRender = ({ data, graphType, darkMode, isFullScreen, setIsFul
                 <YAxis 
                   dataKey="y" 
                   name="Y" 
-                  stroke={darkMode ? "rgba(255,255,255,0.5)" : "rgba(0,0,0,0.5)"} 
+                  stroke="rgba(255,255,255,0.5)" 
                   tick={{ fill: textColor }} 
                 />
                 <ZAxis 
@@ -828,7 +806,7 @@ const EnhancedGraphRender = ({ data, graphType, darkMode, isFullScreen, setIsFul
                   range={[60, 300]} 
                   name="Size" 
                 />
-                <Tooltip content={<CustomTooltip darkMode={darkMode} />} />
+                <Tooltip content={<CustomTooltip />} />
                 {chartSettings?.showLegend && <Legend wrapperStyle={{ color: textColor }} />}
                 {["current", "comparison"].map((series, index) => {
                   const seriesData = transformedData.filter(item => item.series === series);
@@ -876,7 +854,7 @@ const EnhancedGraphRender = ({ data, graphType, darkMode, isFullScreen, setIsFul
                     <Cell key={`cell-${index}`} fill={currentPalette[index % currentPalette.length]} />
                   ))}
                 </Pie>
-                <Tooltip content={<CustomTooltip darkMode={darkMode} />} />
+                <Tooltip content={<CustomTooltip />} />
                 {chartSettings?.showLegend && <Legend wrapperStyle={{ color: textColor }} />}
               </PieChart>
             )}
@@ -892,7 +870,7 @@ const EnhancedGraphRender = ({ data, graphType, darkMode, isFullScreen, setIsFul
         <div className="absolute bottom-4 right-4">
           <button 
             onClick={toggleFullScreen}
-            className={`bg-${darkMode ? 'gray-700' : 'gray-300'} hover:bg-${darkMode ? 'gray-600' : 'gray-400'} text-${darkMode ? 'white' : 'gray-800'} p-2 rounded-full shadow-lg transition-colors`}
+            className="bg-gray-700 hover:bg-gray-600 text-white p-2 rounded-full shadow-lg transition-colors"
             aria-label="Exit full screen"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -906,7 +884,7 @@ const EnhancedGraphRender = ({ data, graphType, darkMode, isFullScreen, setIsFul
 };
 
 // ... (rest of the components remain the same, but update AIInsightsPanel to handle loading and error states) ...
-const AIInsightsPanel = ({ data, graphType, darkMode }) => {
+const AIInsightsPanel = ({ data, graphType }) => {
   const [insights, setInsights] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -1274,17 +1252,17 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
   const getInsightColor = (type) => {
     switch (type) {
       case 'trend':
-        return darkMode ? 'blue-500' : 'blue-600';
+        return 'blue-500';
       case 'anomaly':
-        return darkMode ? 'yellow-400' : 'yellow-500';
+        return 'yellow-400';
       case 'opportunity':
-        return darkMode ? 'green-400' : 'green-500';
+        return 'green-400';
       case 'risk':
-        return darkMode ? 'red-400' : 'red-500';
+        return 'red-400';
       case 'error':
-        return darkMode ? 'red-400' : 'red-500';
+        return 'red-400';
       default:
-        return darkMode ? 'purple-400' : 'purple-500';
+        return 'purple-400';
     }
   };
   
@@ -1294,7 +1272,7 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
       <div className="relative">
         <input
           type="text"
-          className={`w-full p-2 border rounded ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+          className="w-full p-2 border rounded bg-gray-700 border-gray-600 text-white"
           placeholder={placeholder}
           value={value}
           onChange={(e) => handleInputChange(field, e.target.value)}
@@ -1303,11 +1281,11 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
         
         {/* History dropdown - removed onBlur event that was causing the issue */}
         {showDropdown && historyItems.length > 0 && (
-          <div className={`absolute z-10 mt-1 w-full border rounded shadow-lg ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'}`}>
+          <div className="absolute z-10 mt-1 w-full border rounded shadow-lg bg-gray-700 border-gray-600">
             {historyItems.map((item, index) => (
               <div
                 key={index}
-                className={`p-2 cursor-pointer ${darkMode ? 'hover:bg-gray-600 text-gray-200' : 'hover:bg-gray-100 text-gray-800'}`}
+                className="p-2 cursor-pointer hover:bg-gray-600 text-gray-200"
                 // Use mousedown instead of click to ensure it fires before blur
                 onMouseDown={(e) => {
                   e.preventDefault(); // Prevent focus loss
@@ -1331,7 +1309,7 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">About Your Business</h3>
             <div>
-              <label className={`block mb-1 font-medium text-${darkMode ? 'gray-300' : 'gray-700'}`}>
+              <label className="block mb-1 font-medium text-gray-300">
                 Industry
               </label>
               {renderInputWithHistory(
@@ -1344,11 +1322,11 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
               )}
             </div>
             <div>
-              <label className={`block mb-1 font-medium text-${darkMode ? 'gray-300' : 'gray-700'}`}>
+              <label className="block mb-1 font-medium text-gray-300">
                 Business Stage
               </label>
               <select
-                className={`w-full p-2 border rounded ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                className="w-full p-2 border rounded bg-gray-700 border-gray-600 text-white"
                 value={businessInfo.stage}
                 onChange={(e) => handleInputChange('stage', e.target.value)}
               >
@@ -1361,7 +1339,7 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
             <div className="flex justify-end mt-4">
               <button
                 onClick={() => setOnboardingStep(1)}
-                className={`px-4 py-2 bg-${darkMode ? 'blue-600' : 'blue-500'} hover:bg-${darkMode ? 'blue-700' : 'blue-600'} text-white rounded`}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
               >
                 Next
               </button>
@@ -1374,24 +1352,24 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Business Details</h3>
             <div>
-              <label className={`block mb-1 font-medium text-${darkMode ? 'gray-300' : 'gray-700'}`}>
+              <label className="block mb-1 font-medium text-gray-300">
                 Current Revenue
               </label>
               <input
                 type="text"
-                className={`w-full p-2 border rounded ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                className="w-full p-2 border rounded bg-gray-700 border-gray-600 text-white"
                 placeholder="e.g. $100K annually, $10K monthly"
                 value={businessInfo.revenue}
                 onChange={(e) => handleInputChange('revenue', e.target.value)}
               />
             </div>
             <div>
-              <label className={`block mb-1 font-medium text-${darkMode ? 'gray-300' : 'gray-700'}`}>
+              <label className="block mb-1 font-medium text-gray-300">
                 Number of Employees
               </label>
               <input
                 type="text"
-                className={`w-full p-2 border rounded ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                className="w-full p-2 border rounded bg-gray-700 border-gray-600 text-white"
                 placeholder="e.g. 5, 20-50, 100+"
                 value={businessInfo.employees}
                 onChange={(e) => handleInputChange('employees', e.target.value)}
@@ -1400,13 +1378,13 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
             <div className="flex justify-between mt-4">
               <button
                 onClick={() => setOnboardingStep(0)}
-                className={`px-4 py-2 bg-${darkMode ? 'gray-600' : 'gray-300'} hover:bg-${darkMode ? 'gray-700' : 'gray-400'} text-${darkMode ? 'white' : 'gray-800'} rounded`}
+                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded"
               >
                 Back
               </button>
               <button
                 onClick={() => setOnboardingStep(2)}
-                className={`px-4 py-2 bg-${darkMode ? 'blue-600' : 'blue-500'} hover:bg-${darkMode ? 'blue-700' : 'blue-600'} text-white rounded`}
+                className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
               >
                 Next
               </button>
@@ -1419,13 +1397,13 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Business Goals & Challenges</h3>
             <div>
-              <label className={`block mb-1 font-medium text-${darkMode ? 'gray-300' : 'gray-700'}`}>
+              <label className="block mb-1 font-medium text-gray-300">
                 Business Goals
               </label>
               {/* Modified textarea with history implementation */}
               <div className="relative">
                 <textarea
-                  className={`w-full p-2 border rounded ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                  className="w-full p-2 border rounded bg-gray-700 border-gray-600 text-white"
                   placeholder="e.g. Increase customer retention, Expand to new markets"
                   rows={3}
                   value={businessInfo.goals}
@@ -1435,11 +1413,11 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
                 
                 {/* History dropdown for goals - modified to use mousedown */}
                 {showGoalsDropdown && goalsHistory.length > 0 && (
-                  <div className={`absolute z-10 mt-1 w-full border rounded shadow-lg ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'}`}>
+                  <div className="absolute z-10 mt-1 w-full border rounded shadow-lg bg-gray-700 border-gray-600">
                     {goalsHistory.map((item, index) => (
                       <div
                         key={index}
-                        className={`p-2 cursor-pointer ${darkMode ? 'hover:bg-gray-600 text-gray-200' : 'hover:bg-gray-100 text-gray-800'}`}
+                        className="p-2 cursor-pointer hover:bg-gray-600 text-gray-200"
                         onMouseDown={(e) => {
                           e.preventDefault();
                           handleHistoryItemClick('goals', item);
@@ -1453,13 +1431,13 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
               </div>
             </div>
             <div>
-              <label className={`block mb-1 font-medium text-${darkMode ? 'gray-300' : 'gray-700'}`}>
+              <label className="block mb-1 font-medium text-gray-300">
                 Current Challenges
               </label>
               {/* Modified textarea with history implementation */}
               <div className="relative">
                 <textarea
-                  className={`w-full p-2 border rounded ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                  className="w-full p-2 border rounded bg-gray-700 border-gray-600 text-white"
                   placeholder="e.g. High customer acquisition cost, Seasonal sales fluctuations"
                   rows={3}
                   value={businessInfo.challenges}
@@ -1469,11 +1447,11 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
                 
                 {/* History dropdown for challenges - modified to use mousedown */}
                 {showChallengesDropdown && challengesHistory.length > 0 && (
-                  <div className={`absolute z-10 mt-1 w-full border rounded shadow-lg ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-white border-gray-200'}`}>
+                  <div className="absolute z-10 mt-1 w-full border rounded shadow-lg bg-gray-700 border-gray-600">
                     {challengesHistory.map((item, index) => (
                       <div
                         key={index}
-                        className={`p-2 cursor-pointer ${darkMode ? 'hover:bg-gray-600 text-gray-200' : 'hover:bg-gray-100 text-gray-800'}`}
+                        className="p-2 cursor-pointer hover:bg-gray-600 text-gray-200"
                         onMouseDown={(e) => {
                           e.preventDefault();
                           handleHistoryItemClick('challenges', item);
@@ -1489,13 +1467,13 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
             <div className="flex justify-between mt-4">
               <button
                 onClick={() => setOnboardingStep(1)}
-                className={`px-4 py-2 bg-${darkMode ? 'gray-600' : 'gray-300'} hover:bg-${darkMode ? 'gray-700' : 'gray-400'} text-${darkMode ? 'white' : 'gray-800'} rounded`}
+                className="px-4 py-2 bg-gray-600 hover:bg-gray-700 text-white rounded"
               >
                 Back
               </button>
               <button
                 onClick={completeOnboarding}
-                className={`px-4 py-2 bg-${darkMode ? 'green-600' : 'green-500'} hover:bg-${darkMode ? 'green-700' : 'green-600'} text-white rounded`}
+                className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded"
               >
                 Generate Insights & Roadmap
               </button>
@@ -1523,14 +1501,14 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
             return (
               <div 
                 key={month} 
-                className={`p-4 rounded-lg border ${darkMode ? 'border-gray-700 bg-gray-750' : 'border-gray-200 bg-gray-50'}`}
+                className="p-4 rounded-lg border border-gray-700 bg-gray-750"
               >
-                <h4 className={`font-medium text-${darkMode ? 'blue-400' : 'blue-600'} mb-2`}>
+                <h4 className="font-medium text-blue-400 mb-2">
                   {roadmap[month].title}
                 </h4>
                 <ul className="list-disc pl-5 space-y-1">
                   {roadmap[month].actions.map((action, actionIndex) => (
-                    <li key={actionIndex} className={`text-${darkMode ? 'gray-300' : 'gray-700'}`}>
+                    <li key={actionIndex} className="text-gray-300">
                       {action}
                     </li>
                   ))}
@@ -1544,7 +1522,7 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
   };
 
   return (
-    <div className={`rounded-lg shadow-lg overflow-hidden ${darkMode ? 'bg-gray-800' : 'bg-white'} transition-all duration-300 h-full flex flex-col`}>
+    <div className="rounded-lg shadow-lg overflow-hidden bg-gray-800 transition-all duration-300 h-full flex flex-col">
       <div className="p-4 border-b border-gray-200 dark:border-gray-700 flex justify-between items-center">
         <h2 className="text-lg font-bold">AI Business Insights</h2>
         <div className="flex items-center">
@@ -1557,8 +1535,8 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
             }}
             className={`p-2 rounded-full mr-2 ${
               isSpeaking 
-                ? `bg-red-500 hover:bg-red-600 text-white` 
-                : `bg-${darkMode ? 'gray-700' : 'gray-200'} hover:bg-${darkMode ? 'gray-600' : 'gray-300'} text-${darkMode ? 'white' : 'gray-800'}`
+                ? "bg-red-500 hover:bg-red-600 text-white" 
+                : "bg-gray-700 hover:bg-gray-600 text-white"
             }`}
             aria-label={isSpeaking ? "Stop speaking" : "Read insights aloud"}
             title={isSpeaking ? "Stop speaking" : "Read insights aloud"}
@@ -1578,8 +1556,8 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
             onClick={startOnboarding}
             className={`p-2 rounded-full ${
               loading
-                ? `bg-gray-500 cursor-not-allowed` 
-                : `bg-${darkMode ? 'blue-600' : 'blue-500'} hover:bg-${darkMode ? 'blue-700' : 'blue-600'}`
+                ? "bg-gray-500 cursor-not-allowed" 
+                : "bg-blue-600 hover:bg-blue-700"
             } text-white`}
             disabled={loading}
             aria-label="Generate insights"
@@ -1594,11 +1572,11 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
       
       <div className="p-4 flex-grow overflow-y-auto">
         {showOnboarding ? (
-          <div className={`p-6 rounded-lg ${darkMode ? 'bg-gray-750' : 'bg-white'}`}>
+          <div className="p-6 rounded-lg bg-gray-750">
             {renderOnboardingStep()}
           </div>
         ) : error ? (
-          <div className={`flex flex-col items-center justify-center h-full text-${darkMode ? 'red-400' : 'red-600'}`}>
+          <div className="flex flex-col items-center justify-center h-full text-red-400">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
             </svg>
@@ -1607,24 +1585,24 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
         ) : loading ? (
           <div className="flex flex-col items-center justify-center h-full py-8">
             <div className="animate-pulse flex flex-col items-center">
-              <div className={`h-4 bg-${darkMode ? 'gray-700' : 'gray-300'} rounded w-3/4 mb-4`}></div>
-              <div className={`h-4 bg-${darkMode ? 'gray-700' : 'gray-300'} rounded w-2/3 mb-4`}></div>
-              <div className={`h-4 bg-${darkMode ? 'gray-700' : 'gray-300'} rounded w-1/2 mb-8`}></div>
+              <div className="h-4 bg-gray-700 rounded w-3/4 mb-4"></div>
+              <div className="h-4 bg-gray-700 rounded w-2/3 mb-4"></div>
+              <div className="h-4 bg-gray-700 rounded w-1/2 mb-8"></div>
               
-              <div className={`h-4 bg-${darkMode ? 'gray-700' : 'gray-300'} rounded w-full mb-2`}></div>
-              <div className={`h-4 bg-${darkMode ? 'gray-700' : 'gray-300'} rounded w-full mb-2`}></div>
-              <div className={`h-4 bg-${darkMode ? 'gray-700' : 'gray-300'} rounded w-3/4`}></div>
+              <div className="h-4 bg-gray-700 rounded w-full mb-2"></div>
+              <div className="h-4 bg-gray-700 rounded w-full mb-2"></div>
+              <div className="h-4 bg-gray-700 rounded w-3/4"></div>
             </div>
           </div>
         ) : (!explanation && !suggestions) ? (
-          <div className={`flex flex-col items-center justify-center h-full text-${darkMode ? 'gray-400' : 'gray-500'}`}>
+          <div className="flex flex-col items-center justify-center h-full text-gray-400">
             <svg xmlns="http://www.w3.org/2000/svg" className="h-12 w-12 mb-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
             </svg>
             <p className="text-center">Generate AI insights and a strategic roadmap for your business</p>
             <button 
               onClick={startOnboarding}
-              className={`mt-4 px-4 py-2 bg-${darkMode ? 'blue-600' : 'blue-500'} hover:bg-${darkMode ? 'blue-700' : 'blue-600'} text-white rounded`}
+              className="mt-4 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded"
             >
               Get Started
             </button>
@@ -1633,12 +1611,12 @@ const AIInsightsPanel = ({ data, graphType, darkMode }) => {
           <>
             <div className="mb-6">
               <h3 className="text-md font-semibold mb-2">Chart Analysis</h3>
-              <p className={`text-${darkMode ? 'gray-300' : 'gray-700'}`}>{explanation}</p>
+              <p className="text-gray-300">{explanation}</p>
             </div>
             
             <div className="mb-6">
               <h3 className="text-md font-semibold mb-2">Business Insights & Recommendations</h3>
-              <div className={`text-${darkMode ? 'gray-300' : 'gray-700'} whitespace-pre-line`}>
+              <div className="text-gray-300 whitespace-pre-line">
                 {suggestions.split('\n').map((line, index) => (
                   <p key={index} className={line.trim().startsWith('•') ? 'ml-4 mb-3' : ''}>{line}</p>
                 ))}

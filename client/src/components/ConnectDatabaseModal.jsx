@@ -4,7 +4,7 @@ import axios from "axios";
 import { API_BASE_URL } from "../lib/api";
 import { SiPostgresql, } from 'react-icons/si';
 import { GrMysql } from 'react-icons/gr';
-const ConnectDatabaseModal = ({ darkMode, onClose }) => {
+const ConnectDatabaseModal = ({ onClose }) => {
   const [step, setStep] = useState("info");
   const [connectionMethod, setConnectionMethod] = useState("connectionString");
   const [formData, setFormData] = useState({
@@ -82,8 +82,8 @@ const ConnectDatabaseModal = ({ darkMode, onClose }) => {
   };
 
   return (
-    <div className={`fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50`}>
-      <div className={`relative w-full max-w-md mx-2 md:mx-auto p-6 rounded-lg shadow-xl ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+      <div className="relative w-full max-w-md mx-2 md:mx-auto p-6 rounded-lg shadow-xl bg-gray-800 text-white">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
@@ -97,7 +97,7 @@ const ConnectDatabaseModal = ({ darkMode, onClose }) => {
 
         {step === "info" && (
           <div>
-            <div className={`mb-6 p-4 rounded-lg ${darkMode ? 'bg-blue-900 text-blue-100' : 'bg-blue-100 text-blue-800'}`}>
+            <div className="mb-6 p-4 rounded-lg bg-blue-900 text-blue-100">
               <h3 className="font-bold mb-2">Important Information</h3>
               <p className="mb-2">Please ensure you have the following information ready:</p>
               <ul className="list-disc list-inside space-y-1 text-sm">
@@ -116,7 +116,7 @@ const ConnectDatabaseModal = ({ darkMode, onClose }) => {
             </div>
             <button
               onClick={() => setStep("form")}
-              className={`w-full py-2 rounded-lg ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+              className="w-full py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
             >
               Continue
             </button>
@@ -141,12 +141,8 @@ const ConnectDatabaseModal = ({ darkMode, onClose }) => {
                         className={`
           flex flex-col items-center justify-center px-4 py-3 rounded-md border w-32 transition-all
           ${formData.dbType === type
-                            ? darkMode
-                              ? 'bg-blue-700 border-blue-500 text-white'
-                              : 'bg-blue-100 border-blue-500 text-blue-900'
-                            : darkMode
-                              ? 'bg-gray-700 border-gray-500 text-white'
-                              : 'bg-white border-gray-300 text-gray-800'}
+                            ? 'bg-blue-700 border-blue-500 text-white'
+                            : 'bg-gray-700 border-gray-500 text-white'}
         `}
                       >
                         {type === "PostgreSQL" ? (
@@ -166,7 +162,7 @@ const ConnectDatabaseModal = ({ darkMode, onClose }) => {
                   value={formData.dbName}
                   onChange={handleInputChange}
                   required
-                  className={`w-full px-3 py-2 rounded-md ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'} border`}
+                  className="w-full px-3 py-2 rounded-md bg-gray-700 text-white border-gray-600 border"
                 />
               </div>
 
@@ -203,7 +199,7 @@ const ConnectDatabaseModal = ({ darkMode, onClose }) => {
                     onChange={handleInputChange}
                     required={connectionMethod === "connectionString"}
                     placeholder="postgresql://username:password@host:port/database"
-                    className={`w-full px-3 py-2 rounded-md ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'} border`}
+                    className="w-full px-3 py-2 rounded-md bg-gray-700 text-white border-gray-600 border"
                   />
 
                 </div>
@@ -219,7 +215,7 @@ const ConnectDatabaseModal = ({ darkMode, onClose }) => {
                         value={formData.username}
                         onChange={handleInputChange}
                         required={connectionMethod === "credentials"}
-                        className={`w-full px-3 py-2 rounded-md ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'} border`}
+                        className="w-full px-3 py-2 rounded-md bg-gray-700 text-white border-gray-600 border"
                       />
                     </div>
                     <div>
@@ -230,7 +226,7 @@ const ConnectDatabaseModal = ({ darkMode, onClose }) => {
                         value={formData.password}
                         onChange={handleInputChange}
                         required={connectionMethod === "credentials"}
-                        className={`w-full px-3 py-2 rounded-md ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'} border`}
+                        className="w-full px-3 py-2 rounded-md bg-gray-700 text-white border-gray-600 border"
                       />
                     </div>
                     <div>
@@ -242,7 +238,7 @@ const ConnectDatabaseModal = ({ darkMode, onClose }) => {
                         onChange={handleInputChange}
                         required={connectionMethod === "credentials"}
                         placeholder="localhost"
-                        className={`w-full px-3 py-2 rounded-md ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'} border`}
+                        className="w-full px-3 py-2 rounded-md bg-gray-700 text-white border-gray-600 border"
                       />
                     </div>
                     <div>
@@ -253,7 +249,7 @@ const ConnectDatabaseModal = ({ darkMode, onClose }) => {
                         value={formData.port}
                         onChange={handleInputChange}
                         placeholder="5432"
-                        className={`w-full px-3 py-2 rounded-md ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'} border`}
+                        className="w-full px-3 py-2 rounded-md bg-gray-700 text-white border-gray-600 border"
                       />
                     </div>
                   </>
@@ -263,9 +259,7 @@ const ConnectDatabaseModal = ({ darkMode, onClose }) => {
               type="submit"
               disabled={!isFormValid()}
               className={`w-full py-2 rounded-lg ${isFormValid()
-                  ? darkMode
-                    ? 'bg-blue-600 hover:bg-blue-700'
-                    : 'bg-blue-500 hover:bg-blue-600'
+                  ? 'bg-blue-600 hover:bg-blue-700'
                   : 'bg-gray-400 cursor-not-allowed'
                 } text-white`}
             >
@@ -290,7 +284,7 @@ const ConnectDatabaseModal = ({ darkMode, onClose }) => {
             <p className="mb-4">Your database has been connected successfully.</p>
             <button
               onClick={onClose}
-              className={`px-4 py-2 rounded-lg ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+              className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
             >
               Close
             </button>
@@ -306,7 +300,7 @@ const ConnectDatabaseModal = ({ darkMode, onClose }) => {
             <p className="mb-4 text-red-500">{error}</p>
             <button
               onClick={() => setStep("form")}
-              className={`px-4 py-2 rounded-lg ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+              className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
             >
               Try Again
             </button>

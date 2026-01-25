@@ -6,8 +6,7 @@ import { cn } from "../../lib/utils";
 export const FlipWords = ({
   words,
   duration = 3000,
-  className,
-  darkMode // Add darkMode prop
+  className
 }) => {
   const [currentWord, setCurrentWord] = useState(words[0]);
   const [isAnimating, setIsAnimating] = useState(false);
@@ -53,7 +52,7 @@ export const FlipWords = ({
         }}
         className={cn(
           "z-10 inline-block relative text-left px-2",
-          darkMode ? "text-neutral-100" : "text-neutral-900",
+          "text-neutral-100",
           className
         )}
         key={currentWord}>

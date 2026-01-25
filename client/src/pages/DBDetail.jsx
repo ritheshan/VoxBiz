@@ -31,9 +31,6 @@ const DatabaseDetailsPage = ( )=> {
   const [errorMessage, setErrorMessage] = useState('');
   const [processingVoice, setProcessingVoice] = useState(false);
   const [showVoiceModal, setShowVoiceModal] = useState(false);
-  const [darkMode, setDarkMode] = useState(
-    window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches
-  );
   const [translations, setTranslations] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   useEffect(() => {
@@ -53,47 +50,8 @@ const DatabaseDetailsPage = ( )=> {
    
   }, [dbInfo]);
 
-  // Listen for theme changes
+  // Set default translations
   useEffect(() => {
-    const handleThemeChange = (event) => {
-      const newTheme = event.detail.theme;
-      setDarkMode(newTheme === 'dark');
-    };
-    
-    window.addEventListener('themeChange', handleThemeChange);
-    
-    return () => {
-      window.removeEventListener('themeChange', handleThemeChange);
-    };
-  }, []);
-
-  // Listen for language changes
-  useEffect(() => {
-    const handleLanguageChange = (event) => {
-      if (event.detail && event.detail.translations) {
-        console.log("Language change detected:", event.detail);
-        setTranslations(current => ({...current, ...event.detail.translations}));
-      }
-    };
-    
-    window.addEventListener('languageChange', handleLanguageChange);
-    
-    return () => {
-      window.removeEventListener('languageChange', handleLanguageChange);
-    };
-  }, []);
-  
-  useEffect(() => {
-    // Register this page's translation keys
-    window.currentPageTranslationKeys = [
-      'title', 'createButton', 'connectButton', 'noData', 'dbName',
-      'dbType', 'accessLevel', 'lastAccessed', 'readOnly', 'readWrite', 'actions', 
-      'queryDatabase', 'voiceSearch', 'dbCredentials',
-      'connectionString', 'permissions', 'save', 'cancel', 'editCredentials',
-      'queryPrompt', 'interactions', 'totalQueries', 'successRate', 'avgResponseTime',
-      'ruleManager', 'manageRules', 'processing'
-    ];
-    
     // Set default English texts
     const defaultTexts = {
       title: 'Database Details',
@@ -121,36 +79,11 @@ const DatabaseDetailsPage = ( )=> {
       totalQueries: "Total Queries",
       successRate: "Success Rate",
       avgResponseTime: "Avg Response Time",
-      manageRules: "Manage Database Rules"
+      manageRules: "Manage Database Rules",
+      queryDatabase: "Query Database"
     };
     
     setTranslations(defaultTexts);
-    window.currentPageDefaultTexts = defaultTexts;
-    
-    // Handle translations loading
-    const handleTranslationsLoaded = (event) => {
-      if (event.detail && event.detail.translations) {
-        setTranslations(prev => ({...prev, ...event.detail.translations}));
-      }
-    };
-    
-    window.addEventListener('translationsLoaded', handleTranslationsLoaded);
-    
-    // If there's a stored language, trigger a translation
-    const storedLanguage = localStorage.getItem('language');
-    if (storedLanguage && storedLanguage !== 'english') {
-      // Inform navbar that we need translations by triggering a custom event
-      window.dispatchEvent(new CustomEvent('pageLoaded', { 
-        detail: { needsTranslation: true, language: storedLanguage } 
-      }));
-    }
-    
-    // Clean up when component unmounts
-    return () => {
-      delete window.currentPageTranslationKeys;
-      delete window.currentPageDefaultTexts;
-      window.removeEventListener('translationsLoaded', handleTranslationsLoaded);
-    };
   }, []);
 
   const handleCredentialChange = (e) => {
@@ -253,13 +186,13 @@ const DatabaseDetailsPage = ( )=> {
   // Get translated text with fallback to default
   const getText = (key) => {
     if (!key) return ""; // Return empty string if key is undefined/null
-    return translations[key] || window.currentPageDefaultTexts?.[key] || key;
+    return translations[key] || key;
   };
   
 
   if (loading) {
     return (
-      <div className={`min-h-screen ${darkMode ? 'bg-slate-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+      <div className="min-h-screen bg-slate-900 text-white">
         <div className="flex justify-center items-center h-screen">
           <Loader />
         </div>
@@ -269,7 +202,7 @@ const DatabaseDetailsPage = ( )=> {
 
   if (error || !database) {
     return (
-      <div className={`min-h-screen ${darkMode ? 'bg-slate-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+      <div className="min-h-screen bg-slate-900 text-white">
         <div className="flex justify-center items-center h-screen">
           <div className="text-center">
             <h2 className="text-xl font-semibold mb-2">{error || getText('noData')}</h2>
@@ -281,7 +214,7 @@ const DatabaseDetailsPage = ( )=> {
   }
 
   return (
-    <div className={`min-h-screen w-screen ${darkMode ? 'bg-slate-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+    <div className="min-h-screen w-screen bg-slate-900 text-white">
       <Navbar />
 
       {/* Main Content */}
@@ -314,7 +247,7 @@ const DatabaseDetailsPage = ( )=> {
           <div className="mb-6 flex justify-between items-center">
             <div>
               <h1 className="text-3xl font-bold">{database.name}</h1>
-              <p className={`text-sm ${darkMode ? 'text-gray-400' : 'text-gray-500'}`}>
+              <p className="text-sm text-gray-400">
                 {database.type} • {database.lastAccessed}
               </p>
             </div>
@@ -329,12 +262,12 @@ const DatabaseDetailsPage = ( )=> {
           </div>
 
           {/* Voice Query Section */}
-          <div className={`mb-8 p-6 rounded-xl ${darkMode ? 'bg-slate-800' : 'bg-white shadow'}`}>
+          <div className="mb-8 p-6 rounded-xl bg-slate-800">
             <div className="flex items-center mb-4">
               <h2 className="text-xl font-semibold mr-2">{translations.queryDatabase}</h2>
               <Mic className="h-5 w-5 text-indigo-500" />
             </div>
-            <p className={`mb-4 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <p className="mb-4 text-gray-300">
               {translations.queryPrompt}
             </p>
             
@@ -432,13 +365,13 @@ const DatabaseDetailsPage = ( )=> {
           )}
 
           {/* Database Credentials Section */}
-          <div className={`rounded-xl p-6 ${darkMode ? 'bg-slate-800' : 'bg-white shadow'}`}>
+          <div className="rounded-xl p-6 bg-slate-800">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-semibold">{translations.dbCredentials}</h2>
               {!isEditing ? (
                 <button 
                   onClick={() => setIsEditing(true)} 
-                  className={`flex items-center gap-1 px-3 py-1 rounded ${darkMode ? 'bg-slate-700 hover:bg-slate-600' : 'bg-gray-100 hover:bg-gray-200'}`}
+                  className="flex items-center gap-1 px-3 py-1 rounded bg-slate-700 hover:bg-slate-600"
                 >
                   <Edit className="h-4 w-4" />
                   <span>{translations.editCredentials}</span>
@@ -447,7 +380,7 @@ const DatabaseDetailsPage = ( )=> {
                 <div className="flex gap-2">
                   <button 
                     onClick={() => setIsEditing(false)} 
-                    className={`px-3 py-1 rounded ${darkMode ? 'bg-slate-700 hover:bg-slate-600' : 'bg-gray-100 hover:bg-gray-200'}`}
+                    className="px-3 py-1 rounded bg-slate-700 hover:bg-slate-600"
                   >
                     {translations.cancel}
                   </button>
@@ -464,7 +397,7 @@ const DatabaseDetailsPage = ( )=> {
 
             <div className="space-y-4">
               <div>
-                <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <label className="block text-sm font-medium mb-1 text-gray-300">
                   {translations.connectionString}
                 </label>
                 {isEditing ? (
@@ -473,7 +406,7 @@ const DatabaseDetailsPage = ( )=> {
                     name="connectionString"
                     value={credentials.connectionString}
                     onChange={handleCredentialChange}
-                    className={`w-full p-2 rounded border ${darkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-white border-gray-300'}`}
+                    className="w-full p-2 rounded border bg-slate-700 border-slate-600 text-white"
                   />
                 ) : (
                   <div className="flex items-center">
@@ -484,7 +417,7 @@ const DatabaseDetailsPage = ( )=> {
               </div>
 
               <div>
-                <label className={`block text-sm font-medium mb-1 ${darkMode ? 'text-gray-300' : 'text-gray-700'}`}>
+                <label className="block text-sm font-medium mb-1 text-gray-300">
                   {translations.permissions}
                 </label>
                 {isEditing ? (
@@ -492,7 +425,7 @@ const DatabaseDetailsPage = ( )=> {
                     name="permissions"
                     value={credentials.permissions}
                     onChange={handleCredentialChange}
-                    className={`w-full p-2 rounded border ${darkMode ? 'bg-slate-700 border-slate-600 text-white' : 'bg-white border-gray-300'}`}
+                    className="w-full p-2 rounded border bg-slate-700 border-slate-600 text-white"
                   >
                     <option value="readOnly">{translations.readOnly}</option>
                     <option value="readWrite">{translations.readWrite}</option>
@@ -500,8 +433,8 @@ const DatabaseDetailsPage = ( )=> {
                 ) : (
                   <div className={`inline-flex items-center px-2 py-1 rounded ${
                     credentials.permissions === 'readWrite' 
-                      ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200' 
-                      : 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200'
+                      ? 'bg-green-900 text-green-200' 
+                      : 'bg-blue-900 text-blue-200'
                   }`}>
                     {translations[credentials.permissions === 'readWrite' ? 'readWrite' : 'readOnly']}
                   </div>
@@ -513,12 +446,11 @@ const DatabaseDetailsPage = ( )=> {
       </div>
       {showVoiceModal && (
         <VoiceSearchModal 
-          darkMode={darkMode}
           onClose={() => setShowVoiceModal(false)}
           onQuery={handleDatabaseQuery}
         />
       )}
-      <footer className="mt-auto py-4 text-center backdrop-blur-sm bg-white/30 dark:bg-black/30">
+      <footer className="mt-auto py-4 text-center backdrop-blur-sm bg-black/30">
         <p className="text-sm">© 2025 Data Visualization Platform</p>
       </footer>
     </div>

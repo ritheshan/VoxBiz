@@ -93,7 +93,7 @@ const generateHeadCells = (data, translations) => {
 };
 
 function EnhancedTableHead(props) {
-  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells, darkMode } = props;
+  const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort, headCells } = props;
   
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
@@ -105,8 +105,8 @@ function EnhancedTableHead(props) {
         <TableCell 
           padding="checkbox"
           sx={{ 
-            bgcolor: darkMode ? 'rgba(255, 255, 255, 0.08)' : '#f5f5f5',
-            color: darkMode ? 'white' : 'rgba(0, 0, 0, 0.87)'
+            bgcolor: 'rgba(255, 255, 255, 0.08)',
+            color: 'white'
           }}
         >
           <Checkbox
@@ -126,8 +126,8 @@ function EnhancedTableHead(props) {
             padding={headCell.disablePadding ? 'none' : 'normal'}
             sortDirection={orderBy === headCell.id ? order : false}
             sx={{ 
-              bgcolor: darkMode ? 'rgba(255, 255, 255, 0.08)' : '#f5f5f5',
-              color: darkMode ? 'white' : 'rgba(0, 0, 0, 0.87)',
+              bgcolor: 'rgba(255, 255, 255, 0.08)',
+              color: 'white',
               fontWeight: 600
             }}
           >
@@ -137,13 +137,13 @@ function EnhancedTableHead(props) {
               onClick={createSortHandler(headCell.id)}
               sx={{
                 '&.MuiTableSortLabel-root': {
-                  color: darkMode ? 'rgba(255, 255, 255, 0.7)' : 'rgba(0, 0, 0, 0.87)',
+                  color: 'rgba(255, 255, 255, 0.7)',
                 },
                 '&.MuiTableSortLabel-root.Mui-active': {
-                  color: darkMode ? 'white' : 'primary.main',
+                  color: 'white',
                 },
                 '& .MuiTableSortLabel-icon': {
-                  color: darkMode ? 'rgba(255, 255, 255, 0.5) !important' : 'rgba(0, 0, 0, 0.54) !important',
+                  color: 'rgba(255, 255, 255, 0.5) !important',
                 }
               }}
             >
@@ -169,7 +169,6 @@ function EnhancedTableToolbar(props) {
     onSearch, 
     searchQuery, 
     setSearchQuery, 
-    darkMode, 
     translations,
     onFilter,
     filterOptions
@@ -216,13 +215,13 @@ function EnhancedTableToolbar(props) {
           pr: { xs: 1, sm: 1 },
           py: 1, 
           borderBottom: '1px solid',
-          borderColor: darkMode ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.12)',
+          borderColor: 'rgba(255, 255, 255, 0.12)',
         },
         numSelected > 0 && {
           bgcolor: (theme) =>
             alpha(theme.palette.primary.main, theme.palette.action.activatedOpacity),
         },
-        darkMode && {
+        {
           bgcolor: numSelected > 0 ? 
             'rgba(144, 202, 249, 0.16)' : 
             'rgb(18, 18, 18)',
@@ -258,9 +257,9 @@ function EnhancedTableToolbar(props) {
             display: 'flex', 
             alignItems: 'center', 
             width: '100%',
-            bgcolor: darkMode ? 'rgba(255, 255, 255, 0.05)' : '#f5f5f5',
+            bgcolor: 'rgba(255, 255, 255, 0.05)',
             border: '1px solid',
-            borderColor: darkMode ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.12)',
+            borderColor: 'rgba(255, 255, 255, 0.12)',
           }}
           elevation={1}
         >
@@ -268,9 +267,9 @@ function EnhancedTableToolbar(props) {
             sx={{ 
               ml: 1, 
               flex: 1, 
-              color: darkMode ? 'white' : 'rgba(0, 0, 0, 0.87)',
+              color: 'white',
               '&::placeholder': {
-                color: darkMode ? 'rgba(255, 255, 255, 0.5)' : 'rgba(0, 0, 0, 0.42)',
+                color: 'rgba(255, 255, 255, 0.5)',
               }
             }}
             placeholder={translations?.search || "Search..."}
@@ -278,7 +277,7 @@ function EnhancedTableToolbar(props) {
             onChange={handleSearchChange}
           />
           <IconButton sx={{ p: '10px' }} aria-label="search">
-            <SearchIcon sx={{ color: darkMode ? 'white' : 'rgba(0, 0, 0, 0.54)' }} />
+            <SearchIcon sx={{ color: 'white' }} />
           </IconButton>
         </Paper>
       </Box>
@@ -286,13 +285,13 @@ function EnhancedTableToolbar(props) {
       {numSelected > 0 ? (
         <Tooltip title={translations?.delete || "Delete"}>
           <IconButton>
-            <DeleteIcon sx={{ color: darkMode ? 'white' : 'rgba(0, 0, 0, 0.54)' }} />
+            <DeleteIcon sx={{ color: 'white' }} />
           </IconButton>
         </Tooltip>
       ) : (
         <Tooltip title={translations?.filter || "Filter list"}>
           <IconButton onClick={handleFilterClick}>
-            <FilterListIcon sx={{ color: darkMode ? 'white' : 'rgba(0, 0, 0, 0.54)' }} />
+            <FilterListIcon sx={{ color: 'white' }} />
           </IconButton>
         </Tooltip>
       )}
@@ -314,8 +313,8 @@ function EnhancedTableToolbar(props) {
   sx={{
     p: 2,
     width: 250,
-    bgcolor: darkMode ? 'rgba(18, 18, 18, 0.9)' : 'white',
-    color: darkMode ? 'white' : 'black',
+    bgcolor: 'rgba(18, 18, 18, 0.9)',
+    color: 'white',
     borderRadius: 2,
     boxShadow: 3,
   }}
@@ -328,7 +327,7 @@ function EnhancedTableToolbar(props) {
     <Box key={category} sx={{ mb: 2 }}>
       <Typography
         variant="subtitle2"
-        sx={{ mb: 1, color: darkMode ? 'white' : 'rgba(0, 0, 0, 0.87)' }}
+        sx={{ mb: 1, color: 'white' }}
       >
         {category}
       </Typography>
@@ -341,15 +340,15 @@ function EnhancedTableToolbar(props) {
                 checked={filterSelections[category] === option}
                 onChange={() => handleFilterChange(category, option)}
                 sx={{
-                  color: darkMode ? 'white' : 'rgba(0, 0, 0, 0.54)',
+                  color: 'white',
                   '&.Mui-checked': {
-                    color: darkMode ? '#90caf9' : 'primary.main',
+                    color: '#90caf9',
                   },
                 }}
               />
             }
             label={option}
-            sx={{ color: darkMode ? 'white' : 'rgba(0, 0, 0, 0.87)' }}
+            sx={{ color: 'white' }}
           />
         ))}
       </FormGroup>
@@ -357,7 +356,7 @@ function EnhancedTableToolbar(props) {
   ))}
 
   <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
-    <Button onClick={handleFilterClose} sx={{ mr: 1, color: darkMode ? '#90caf9' : 'primary.main' }}>
+    <Button onClick={handleFilterClose} sx={{ mr: 1, color: '#90caf9' }}>
       {translations?.cancel || "Cancel"}
     </Button>
     <Button
@@ -394,7 +393,6 @@ const [customColumns, setCustomColumns] = useState([]);
   const [error, setError] = useState(null);
   const [queryHistory, setQueryHistory] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const [darkMode, setDarkMode] = useState(false);
   const [tableTitle, setTableTitle] = useState('');
   const [translations, setTranslations] = useState({});
   const [customQuery, setCustomQuery] = useState('');
@@ -632,57 +630,6 @@ const [customColumns, setCustomColumns] = useState([]);
     
     fetchQueryHistoryFromBackend();
   }); 
-  // Listen for theme changes
-  useEffect(() => {
-    const handleThemeChange = (event) => {
-      const newTheme = event.detail?.theme || 
-                      (document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-      setDarkMode(newTheme === 'dark');
-    };
-    
-    const isDarkMode = document.documentElement.classList.contains('dark') || 
-                      window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setDarkMode(isDarkMode);
-    
-    window.addEventListener('themeChange', handleThemeChange);
-    
-    return () => {
-      window.removeEventListener('themeChange', handleThemeChange);
-    };
-  }, []);
-
-  // Listen for language changes
-useEffect(() => {
-  const handleLanguageChange = (event) => {
-    if (event.detail && event.detail.translations) {
-      console.log("Language change detected:", event.detail);
-      setTranslations(current => {
-        const newTranslations = {...current, ...event.detail.translations};
-        
-        // Update head cells with new translations
-        if (rows.length > 0) {
-          // Regenerate head cells with new translations
-          const updatedHeadCells = generateHeadCells(rows, newTranslations);
-          setHeadCells(updatedHeadCells);
-        }
-        
-        // Update the densePadding label
-        if (newTranslations.densePadding) {
-          setDensePaddingLabel(newTranslations.densePadding);
-        }
-        
-        return newTranslations;
-      });
-    }
-  };
-  
-  window.addEventListener('languageChange', handleLanguageChange);
-  
-  return () => {
-    window.removeEventListener('languageChange', handleLanguageChange);
-  };
-}, [rows]);  // Add rows as a dependency
-  
 
 useEffect(() => {
     window.currentPageTranslationKeys = [
@@ -706,13 +653,6 @@ useEffect(() => {
     };
     
     setDensePaddingLabel(window.currentPageDefaultTexts.densePadding);
-    
-    const storedLanguage = localStorage.getItem('language');
-    if (storedLanguage && storedLanguage !== 'english') {
-      window.dispatchEvent(new CustomEvent('pageLoaded', { 
-        detail: { needsTranslation: true, language: storedLanguage } 
-      }));
-    }
 
     return () => {
       delete window.currentPageTranslationKeys;
@@ -1115,7 +1055,7 @@ const navigateToGraphView = () => {
         flexDirection: 'column',
         pt: 0,
         transition: 'background-image 0.3s ease-in-out',
-        bgcolor: darkMode ? '#121212' : '#f5f5f5',
+        bgcolor: '#121212',
       }}
     >
       <Navbar />
@@ -1132,10 +1072,10 @@ const navigateToGraphView = () => {
             '& .MuiDrawer-paper': {
               width: 320,
               boxSizing: 'border-box',
-              bgcolor: darkMode ? '#1E1E1E' : '#FFFFFF',
-              color: darkMode ? '#FFFFFF' : '#000000',
+              bgcolor: '#1E1E1E',
+              color: '#FFFFFF',
               borderLeft: '1px solid',
-              borderColor: darkMode ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)',
+              borderColor: 'rgba(255,255,255,0.12)',
             },
           }}
         >
@@ -1143,11 +1083,11 @@ const navigateToGraphView = () => {
             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
               <Typography variant="h6">Customizations</Typography>
               <IconButton onClick={() => setSidebarOpen(false)} size="small">
-                <CloseIcon sx={{ color: darkMode ? '#FFFFFF' : '#000000' }} />
+                <CloseIcon sx={{ color: '#FFFFFF' }} />
               </IconButton>
             </Box>
             
-            <Divider sx={{ mb: 2, bgcolor: darkMode ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)' }} />
+            <Divider sx={{ mb: 2, bgcolor: 'rgba(255,255,255,0.12)' }} />
             
             {/* Custom SQL Query */}
             <Typography variant="subtitle2" sx={{ mb: 1 }}>Custom SQL Query</Typography>
@@ -1162,12 +1102,12 @@ const navigateToGraphView = () => {
               size="small"
               sx={{ mb: 2, 
                 '& .MuiOutlinedInput-root': {
-                  color: darkMode ? '#FFFFFF' : 'inherit',
+                  color: '#FFFFFF',
                   '& fieldset': {
-                    borderColor: darkMode ? 'rgba(255,255,255,0.23)' : 'rgba(0,0,0,0.23)',
+                    borderColor: 'rgba(255,255,255,0.23)',
                   },
                   '&:hover fieldset': {
-                    borderColor: darkMode ? 'rgba(255,255,255,0.5)' : 'rgba(0,0,0,0.5)',
+                    borderColor: 'rgba(255,255,255,0.5)',
                   }
                 }
               }}
@@ -1183,7 +1123,7 @@ const navigateToGraphView = () => {
               Apply Query
             </Button>
             
-            <Divider sx={{ mb: 2, bgcolor: darkMode ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)' }} />
+            <Divider sx={{ mb: 2, bgcolor: 'rgba(255,255,255,0.12)' }} />
             
             {/* Column Selection */}
             <Typography variant="subtitle2" sx={{ mb: 1 }}>Display Columns</Typography>
@@ -1196,20 +1136,20 @@ const navigateToGraphView = () => {
                       checked={customColumns?.includes(cell.id)}
                       onChange={(e) => handleColumnToggle(e, cell.id)}
                       sx={{
-                        color: darkMode ? 'rgba(255,255,255,0.7)' : undefined,
+                        color: 'rgba(255,255,255,0.7)',
                         '&.Mui-checked': {
-                          color: darkMode ? 'primary.light' : undefined,
+                          color: 'primary.light',
                         }
                       }}
                     />
                   }
                   label={cell.label}
-                  sx={{ color: darkMode ? '#FFFFFF' : 'inherit' }}
+                  sx={{ color: '#FFFFFF' }}
                 />
               ))}
             </FormGroup>
             
-            <Divider sx={{ mb: 2, bgcolor: darkMode ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)' }} />
+            <Divider sx={{ mb: 2, bgcolor: 'rgba(255,255,255,0.12)' }} />
             
             {/* Voice Commands for Refinement */}
             <Typography variant="subtitle2" sx={{ mb: 1 }}>Voice Query Refinement</Typography>
@@ -1230,8 +1170,8 @@ const navigateToGraphView = () => {
                 sx={{ 
                   p: 1, 
                   mb: 2, 
-                  bgcolor: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
-                  borderColor: darkMode ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)'
+                  bgcolor: 'rgba(255,255,255,0.05)',
+                  borderColor: 'rgba(255,255,255,0.12)'
                 }}
               >
                 <Typography variant="body2" sx={{ fontStyle: 'italic' }}>
@@ -1251,7 +1191,7 @@ const navigateToGraphView = () => {
               Process Voice Refinement
             </Button>
             
-            <Divider sx={{ mb: 2, bgcolor: darkMode ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)' }} />
+            <Divider sx={{ mb: 2, bgcolor: 'rgba(255,255,255,0.12)' }} />
             
             {/* Query History */}
             <Typography variant="subtitle2" sx={{ mb: 1 }}>Recent Queries</Typography>
@@ -1280,7 +1220,7 @@ const navigateToGraphView = () => {
         ? query.query.slice(0, 30) + (query.query.length > 30 ? '...' : '')
         : ''
     }
-    sx={{ color: darkMode ? '#FFFFFF' : 'inherit' }}
+    sx={{ color: '#FFFFFF' }}
   />
 </ListItemButton>
     </ListItem>
@@ -1315,8 +1255,8 @@ const navigateToGraphView = () => {
             width: '96%',
             margin: '1rem auto',
             mb: 2, 
-            bgcolor: darkMode ? 'rgb(18, 18, 18)' : 'white',
-            color: darkMode ? 'white' : 'rgba(0, 0, 0, 0.87)',
+            bgcolor: 'rgb(18, 18, 18)',
+            color: 'white',
             borderRadius: 2,
             overflow: 'hidden',
             boxShadow: 3,
@@ -1333,7 +1273,6 @@ const navigateToGraphView = () => {
     onSearch={handleSearch}
     searchQuery={searchQuery}
     setSearchQuery={setSearchQuery}
-    darkMode={darkMode}
     translations={translations}
     onFilter={handleFilter}
     filterOptions={filterOptions}
@@ -1358,10 +1297,10 @@ const navigateToGraphView = () => {
       {/* The popup itself */}
       {showInfoPopup && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white dark:bg-slate-800 text-black dark:text-white p-6 rounded-lg shadow-lg w-full max-w-xl relative">
+          <div className="bg-slate-800 text-white p-6 rounded-lg shadow-lg w-full max-w-xl relative">
             <button
               onClick={() => setShowInfoPopup(false)}
-              className="absolute top-2 right-3 text-xl font-bold text-gray-600 dark:text-gray-300 hover:text-red-500"
+              className="absolute top-2 right-3 text-xl font-bold text-gray-300 hover:text-red-500"
             >
               ×
             </button>
@@ -1385,16 +1324,16 @@ const navigateToGraphView = () => {
       mx: 1,
       p: 1,
       borderRadius: 1,
-      color: darkMode ? '#90caf9' : 'primary.main',
+      color: '#90caf9',
       '&:hover': {
-        bgcolor: darkMode ? 'rgba(144, 202, 249, 0.08)' : 'rgba(25, 118, 210, 0.04)'
+        bgcolor: 'rgba(144, 202, 249, 0.08)'
       }
     }}
   >
-    <BarChartIcon sx={{ color: darkMode ? 'white' : 'rgba(0, 0, 0, 0.54)', mr: 1 }} />
+    <BarChartIcon sx={{ color: 'white', mr: 1 }} />
     <Typography 
       variant="body2" 
-      sx={{ color: darkMode ? 'white' : 'rgba(0, 0, 0, 0.87)' }}
+      sx={{ color: 'white' }}
     >
       {translations?.viewGraphs || "View Graphs"}
     </Typography>
@@ -1404,10 +1343,10 @@ const navigateToGraphView = () => {
     onClick={() => setSidebarOpen(!sidebarOpen)}
     sx={{ 
       mr: 2, 
-      color: darkMode ? 'white' : 'inherit',
-      bgcolor: darkMode ? 'action.selected' : 'action.hover',
+      color: 'white',
+      bgcolor: 'action.selected',
       '&:hover': {
-        bgcolor: darkMode ? 'action.focus' : 'action.selected',
+        bgcolor: 'action.focus',
       }
     }}
     aria-label="open customization panel"
@@ -1428,7 +1367,7 @@ const navigateToGraphView = () => {
             </Box>
           ) : filteredRows.length === 0 ? (
             <Box sx={{ p: 3, textAlign: 'center' }}>
-              <Typography sx={{ color: darkMode ? 'white' : 'rgba(0, 0, 0, 0.87)' }}>
+              <Typography sx={{ color: 'white' }}>
                 {translations.noData || 'No data found'}
               </Typography>
             </Box>
@@ -1448,7 +1387,6 @@ const navigateToGraphView = () => {
     headCells={customColumns && customColumns.length > 0 
       ? headCells.filter(cell => customColumns.includes(cell.id)) 
       : headCells}
-    darkMode={darkMode}
   />
   <TableBody>
     {visibleRows.map((row, index) => {
@@ -1466,23 +1404,23 @@ const navigateToGraphView = () => {
           selected={isItemSelected}
           sx={{ 
             cursor: 'pointer',
-            bgcolor: darkMode ? 'rgb(18, 18, 18)' : 'white',
+            bgcolor: 'rgb(18, 18, 18)',
             '&.Mui-selected': {
-              bgcolor: darkMode ? 'rgba(144, 202, 249, 0.3)' : 'rgba(25, 118, 210, 0.2)',
+              bgcolor: 'rgba(144, 202, 249, 0.3)',
             },
             '&.Mui-selected:hover': {
-              bgcolor: darkMode ? 'rgba(144, 202, 249, 0.4)' : 'rgba(25, 118, 210, 0.3)',
+              bgcolor: 'rgba(144, 202, 249, 0.4)',
             },
             '&:hover': {
-              bgcolor: darkMode ? 'rgba(50, 50, 50, 1)' : 'rgba(240, 240, 240, 1)',
+              bgcolor: 'rgba(50, 50, 50, 1)',
             },
           }}
         >
           <TableCell 
             padding="checkbox"
             sx={{ 
-              color: darkMode ? 'white' : 'rgba(0, 0, 0, 0.87)',
-              borderBottomColor: darkMode ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.12)',
+              color: 'white',
+              borderBottomColor: 'rgba(255, 255, 255, 0.12)',
             }}
           >
             <Checkbox
@@ -1505,8 +1443,8 @@ const navigateToGraphView = () => {
               scope={idx === 0 ? 'row' : undefined}
               padding={idx === 0 && !headCell.disablePadding ? 'none' : 'normal'}
               sx={{ 
-                color: darkMode ? 'rgba(255, 255, 255, 0.87)' : 'rgba(0, 0, 0, 0.87)',
-                borderBottomColor: darkMode ? 'rgba(255, 255, 255, 0.12)' : 'rgba(0, 0, 0, 0.12)',
+                color: 'rgba(255, 255, 255, 0.87)',
+                borderBottomColor: 'rgba(255, 255, 255, 0.12)',
                 fontWeight: idx === 0 ? 500 : 400,
               }}
             >
@@ -1527,7 +1465,7 @@ const navigateToGraphView = () => {
         <TableCell 
           colSpan={(customColumns && customColumns.length > 0 ? customColumns.length : headCells.length) + 1} 
           sx={{ 
-            bgcolor: darkMode ? 'rgb(18, 18, 18)' : 'white',
+            bgcolor: 'rgb(18, 18, 18)',
             borderBottom: 'none',
           }}
         />
@@ -1553,18 +1491,18 @@ const navigateToGraphView = () => {
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
             sx={{ 
-              color: darkMode ? 'white' : 'inherit',
+              color: 'white',
               '.MuiSvgIcon-root': {
-                color: darkMode ? 'white' : 'inherit'
+                color: 'white'
               },
               '.MuiTablePagination-selectLabel': {
-                color: darkMode ? 'white' : 'inherit'
+                color: 'white'
               },
               '.MuiTablePagination-displayedRows': {
-                color: darkMode ? 'white' : 'inherit'
+                color: 'white'
               },
               '.MuiTablePagination-select': {
-                color: darkMode ? 'white' : 'inherit'
+                color: 'white'
               }
             }}
           />
@@ -1579,7 +1517,7 @@ const navigateToGraphView = () => {
       />
     }
     label={densePaddingLabel}
-    sx={{ color: darkMode ? 'white' : 'black' }}
+    sx={{ color: 'white' }}
   />
 
 <Box sx={{ display: 'flex', gap: 2 }}>
@@ -1619,7 +1557,7 @@ const navigateToGraphView = () => {
 
         </Paper>
       </Box>
-      <footer className="mt-auto py-4 text-center backdrop-blur-sm bg-white/30 dark:bg-black/30">
+      <footer className="mt-auto py-4 text-center backdrop-blur-sm bg-black/30">
         <p className="text-sm">© 2025 Data Visualization Platform</p>
       </footer>
       
@@ -1631,8 +1569,8 @@ const navigateToGraphView = () => {
         fullWidth
         PaperProps={{
           sx: {
-            bgcolor: darkMode ? '#1E1E1E' : '#FFFFFF',
-            color: darkMode ? '#FFFFFF' : 'inherit',
+            bgcolor: '#1E1E1E',
+            color: '#FFFFFF',
           }
         }}
       >
@@ -1640,7 +1578,7 @@ const navigateToGraphView = () => {
           Refine Your Query
           <IconButton
             onClick={() => setNotExpectedDialogOpen(false)}
-            sx={{ position: 'absolute', right: 8, top: 8, color: darkMode ? '#FFFFFF' : 'inherit' }}
+            sx={{ position: 'absolute', right: 8, top: 8, color: '#FFFFFF' }}
           >
             <CloseIcon />
           </IconButton>
@@ -1661,13 +1599,13 @@ const navigateToGraphView = () => {
             sx={{
               mb: 2,
               '& .MuiOutlinedInput-root': {
-                color: darkMode ? '#FFFFFF' : 'inherit',
+                color: '#FFFFFF',
                 '& fieldset': {
-                  borderColor: darkMode ? 'rgba(255,255,255,0.23)' : 'rgba(0,0,0,0.23)',
+                  borderColor: 'rgba(255,255,255,0.23)',
                 },
               },
               '& .MuiInputLabel-root': {
-                color: darkMode ? 'rgba(255,255,255,0.7)' : 'inherit',
+                color: 'rgba(255,255,255,0.7)',
               }
             }}
           />
@@ -1677,8 +1615,8 @@ const navigateToGraphView = () => {
             sx={{ 
               p: 2, 
               mb: 2, 
-              bgcolor: darkMode ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.03)',
-              borderColor: darkMode ? 'rgba(255,255,255,0.12)' : 'rgba(0,0,0,0.12)',
+              bgcolor: 'rgba(255,255,255,0.05)',
+              borderColor: 'rgba(255,255,255,0.12)',
               fontFamily: 'monospace'
             }}
           >
@@ -1700,7 +1638,6 @@ const navigateToGraphView = () => {
   onClose={() => setEmailModalOpen(false)}
   data={filteredRows}
   tableTitle={tableTitle}
-  darkMode={darkMode}
 />
     </Box>
   );

@@ -19,8 +19,6 @@ const DatabaseRulesManager = () => {
   const [databases, setDatabases] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [darkMode, setDarkMode] = useState(false);
-  const [translations, setTranslations] = useState({});
   const [searchTerm, setSearchTerm] = useState('');
   const [userHasAccess, setUserHasAccess] = useState(false);
   
@@ -102,96 +100,29 @@ const DatabaseRulesManager = () => {
     fetchData();
   }, []);
 
-  // Listen for theme changes
-  useEffect(() => {
-    const handleThemeChange = (event) => {
-      const newTheme = event.detail?.theme || 
-                      (document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-      setDarkMode(newTheme === 'dark');
-    };
-    
-    const isDarkMode = document.documentElement.classList.contains('dark') || 
-                      window.matchMedia('(prefers-color-scheme: dark)').matches;
-    setDarkMode(isDarkMode);
-    
-    window.addEventListener('themeChange', handleThemeChange);
-    
-    return () => {
-      window.removeEventListener('themeChange', handleThemeChange);
-    };
-  }, []);
-
-  // Listen for language changes - FIXED
-  useEffect(() => {
-    const handleLanguageChange = (event) => {
-      if (event.detail && event.detail.translations) {
-        console.log("Language change detected:", event.detail);
-        setTranslations(prevTranslations => ({
-          ...prevTranslations, 
-          ...event.detail.translations
-        }));
-      }
-    };
-    
-    window.addEventListener('languageChange', handleLanguageChange);
-    
-    return () => {
-      window.removeEventListener('languageChange', handleLanguageChange);
-    };
-  }, []);
-  
-  // Set up page translation keys
-  useEffect(() => {
-    // Register this page's translation keys
-    window.currentPageTranslationKeys = [
-      'pageTitle', 'createRule', 'editRule', 'deleteRule', 'testRule',
-     'queryTypes', 'conditions', 'maskingPolicy',
-      'ruleName', 'ruleDescription', 'save', 'cancel', 'noRulesFound',
-      'confirmDelete', 'testSQL', 'runTest', 'testResults',
-      'searchPlaceholder', 'accessDenied', 'loading'
-    ];
-    
-    // Set default English texts
-    window.currentPageDefaultTexts = {
-      pageTitle: 'Database Query Rules Manager',
-      createRule: 'Create New Rule',
-      editRule: 'Edit Rule',
-      deleteRule: 'Delete Rule',
-      testRule: 'Test Rule',
-      queryTypes: 'Query Types',
-      conditions: 'Conditions',
-      maskingPolicy: 'Masking Policy',
-      ruleName: 'Rule Name',
-      ruleDescription: 'Rule Description',
-      save: 'Save',
-      cancel: 'Cancel',
-      noRulesFound: 'No rules found',
-      confirmDelete: 'Are you sure you want to delete this rule?',
-      testSQL: 'Test SQL Query',
-      runTest: 'Run Test',
-      testResults: 'Test Results',
-      searchPlaceholder: 'Search rules...',
-      accessDenied: 'Access Denied: You need database write permissions to access this page.',
-      loading: 'Loading...'
-    };
-    
-    // Initialize translations with default texts
-    setTranslations(window.currentPageDefaultTexts);
-    
-    // If there's a stored language, trigger a translation
-    const storedLanguage = localStorage.getItem('language');
-    if (storedLanguage && storedLanguage !== 'english') {
-      // Inform navbar that we need translations
-      window.dispatchEvent(new CustomEvent('pageLoaded', { 
-        detail: { needsTranslation: true, language: storedLanguage } 
-      }));
-    }
-
-    return () => {
-      delete window.currentPageTranslationKeys;
-      delete window.currentPageDefaultTexts;
-    };
-  }, []);
+  // Static translations
+  const translations = {
+    pageTitle: 'Database Query Rules Manager',
+    createRule: 'Create New Rule',
+    editRule: 'Edit Rule',
+    deleteRule: 'Delete Rule',
+    testRule: 'Test Rule',
+    queryTypes: 'Query Types',
+    conditions: 'Conditions',
+    maskingPolicy: 'Masking Policy',
+    ruleName: 'Rule Name',
+    ruleDescription: 'Rule Description',
+    save: 'Save',
+    cancel: 'Cancel',
+    noRulesFound: 'No rules found',
+    confirmDelete: 'Are you sure you want to delete this rule?',
+    testSQL: 'Test SQL Query',
+    runTest: 'Run Test',
+    testResults: 'Test Results',
+    searchPlaceholder: 'Search rules...',
+    accessDenied: 'Access Denied: You need database write permissions to access this page.',
+    loading: 'Loading...'
+  };
 
   // Filter rules based on search term
   useEffect(() => {
@@ -405,7 +336,7 @@ const DatabaseRulesManager = () => {
   // Return access denied message if user doesn't have access
   if (!loading && !userHasAccess) {
     return (
-      <div className={`min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'}`}>
+      <div className="min-h-screen bg-gray-900 text-white">
         <Navbar />
         <div className="container mx-auto px-4 py-8">
           <div className="flex items-center justify-center h-64">
@@ -420,7 +351,7 @@ const DatabaseRulesManager = () => {
   }
 
   return (
-    <div className={`min-h-screen flex flex-col w-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-100 text-gray-900'}`}
+    <div className="min-h-screen flex flex-col w-screen bg-gray-900 text-white"
     style={{
       backgroundImage: `url('/rule-bg.png')`,
       backgroundSize: '50%', // or even smaller like '10%' or '5%' to zoom out more
@@ -455,14 +386,14 @@ const DatabaseRulesManager = () => {
             placeholder={getTranslatedText('searchPlaceholder')}
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className={`w-full p-2 border rounded-md ${darkMode ? 'bg-gray-800 border-gray-700 text-white' : 'bg-white border-gray-300'}`}
+            className="w-full p-2 border rounded-md bg-gray-800 border-gray-700 text-white"
           />
         </div>
         
         {/* RulesList Component */}
-        <div className={`overflow-x-auto rounded-lg border ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
-          <table className={`min-w-full divide-y ${darkMode ? 'divide-gray-700 bg-gray-800' : 'divide-gray-200 bg-white'}`}>
-            <thead className={darkMode ? 'bg-gray-700' : 'bg-gray-50'}>
+        <div className="overflow-x-auto rounded-lg border border-gray-700">
+          <table className="min-w-full divide-y divide-gray-700 bg-gray-800">
+            <thead className="bg-gray-700">
               <tr>
                 <th scope="col" className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
                   {getTranslatedText('ruleName')}
@@ -478,7 +409,7 @@ const DatabaseRulesManager = () => {
                 </th>
               </tr>
             </thead>
-            <tbody className={`divide-y ${darkMode ? 'divide-gray-700' : 'divide-gray-200'}`}>
+            <tbody className="divide-y divide-gray-700">
               {loading ? (
                 <tr>
                   <td colSpan="5" className="px-6 py-4 text-center">
@@ -501,7 +432,7 @@ const DatabaseRulesManager = () => {
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="flex flex-wrap gap-1">
                         {rule.queryTypes.map((type, idx) => (
-                          <span key={idx} className={`px-2 py-1 text-xs rounded-full ${darkMode ? 'bg-blue-900 text-blue-200' : 'bg-blue-100 text-blue-800'}`}>
+                          <span key={idx} className="px-2 py-1 text-xs rounded-full bg-blue-900 text-blue-200">
                             {type}
                           </span>
                         ))}
@@ -519,21 +450,21 @@ const DatabaseRulesManager = () => {
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm">
                       <button
                         onClick={() => handleOpenRuleTester(rule)}
-                        className={`p-1 mr-2 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
+                        className="p-1 mr-2 rounded-full hover:bg-gray-700"
                         title={getTranslatedText('testRule')}
                       >
                         <PreviewIcon className="text-green-500" />
                       </button>
                       <button
                         onClick={() => handleOpenRuleEditor(rule)}
-                        className={`p-1 mr-2 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
+                        className="p-1 mr-2 rounded-full hover:bg-gray-700"
                         title={getTranslatedText('editRule')}
                       >
                         <EditIcon className="text-blue-500" />
                       </button>
                       <button
                         onClick={() => handleOpenDeleteConfirm(rule)}
-                        className={`p-1 rounded-full ${darkMode ? 'hover:bg-gray-700' : 'hover:bg-gray-100'}`}
+                        className="p-1 rounded-full hover:bg-gray-700"
                         title={getTranslatedText('deleteRule')}
                       >
                         <DeleteIcon className="text-red-500" />
@@ -554,10 +485,10 @@ const DatabaseRulesManager = () => {
         maxWidth="md"
         fullWidth
         PaperProps={{
-          className: darkMode ? 'bg-gray-800 text-white' : 'bg-white'
+          className: 'bg-gray-800 text-white'
         }}
       >
-        <DialogTitle className={`border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+        <DialogTitle className="border-b border-gray-700">
           {currentRule && currentRule.id ? getTranslatedText('editRule') : getTranslatedText('createRule')}
         </DialogTitle>
         <DialogContent className="pt-4">
@@ -569,7 +500,7 @@ const DatabaseRulesManager = () => {
                   type="text"
                   value={currentRule.name || ''}
                   onChange={(e) => setCurrentRule({...currentRule, name: e.target.value})}
-                  className={`w-full p-2 border rounded-md ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                  className="w-full p-2 border rounded-md bg-gray-700 border-gray-600 text-white"
                   required
                 />
               </div>
@@ -580,13 +511,13 @@ const DatabaseRulesManager = () => {
                   value={currentRule.description || ''}
                   onChange={(e) => setCurrentRule({...currentRule, description: e.target.value})}
                   rows="2"
-                  className={`w-full p-2 border rounded-md ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                  className="w-full p-2 border rounded-md bg-gray-700 border-gray-600 text-white"
                 />
               </div>
               
               <div>
                 <label className="block text-sm font-medium mb-2">{getTranslatedText('queryTypes')} *</label>
-                <div className={`flex flex-wrap gap-3 p-3 border rounded-md ${darkMode ? 'bg-gray-700 border-gray-600' : 'bg-gray-50 border-gray-200'}`}>
+                <div className="flex flex-wrap gap-3 p-3 border rounded-md bg-gray-700 border-gray-600">
                   {queryTypes.map((type) => (
                     <label key={type} className="inline-flex items-center">
                       <input
@@ -600,17 +531,17 @@ const DatabaseRulesManager = () => {
                         }}
                         className="mr-2 h-4 w-4"
                       />
-                      <span className={`py-1 px-2 rounded ${darkMode ? 'bg-gray-600 text-white' : 'bg-white text-gray-800'}`}>{type}</span>
+                      <span className="py-1 px-2 rounded bg-gray-600 text-white">{type}</span>
                     </label>
                   ))}
                 </div>
               </div>
               
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-750 border border-gray-700' : 'bg-gray-50 border border-gray-200'}`}>
+              <div className="p-4 rounded-lg bg-gray-750 border border-gray-700">
                 <label className="block text-sm font-medium mb-3">{getTranslatedText('conditions')}</label>
                 <div className="space-y-3">
                   {(currentRule.conditions || []).map((condition, idx) => (
-                    <div key={idx} className={`flex items-center gap-3 p-3 rounded-md ${darkMode ? 'bg-gray-700 border border-gray-600' : 'bg-white border border-gray-200'}`}>
+                    <div key={idx} className="flex items-center gap-3 p-3 rounded-md bg-gray-700 border border-gray-600">
                       <div className="flex-grow">
                         <select
                           value={condition.type}
@@ -619,7 +550,7 @@ const DatabaseRulesManager = () => {
                             updatedConditions[idx] = {...condition, type: e.target.value};
                             setCurrentRule({...currentRule, conditions: updatedConditions});
                           }}
-                          className={`w-full p-2 border rounded-md ${darkMode ? 'bg-gray-600 border-gray-500 text-white' : 'bg-white border-gray-300'}`}
+                          className="w-full p-2 border rounded-md bg-gray-600 border-gray-500 text-white"
                         >
                           {conditionTypes.map((type) => (
                             <option key={type.id} value={type.id}>{type.label}</option>
@@ -636,7 +567,7 @@ const DatabaseRulesManager = () => {
                             setCurrentRule({...currentRule, conditions: updatedConditions});
                           }}
                           placeholder="Condition value"
-                          className={`w-full p-2 border rounded-md ${darkMode ? 'bg-gray-600 border-gray-500 text-white placeholder-gray-400' : 'bg-white border-gray-300'}`}
+                          className="w-full p-2 border rounded-md bg-gray-600 border-gray-500 text-white placeholder-gray-400"
                         />
                       </div>
                       <button
@@ -645,7 +576,7 @@ const DatabaseRulesManager = () => {
                           updatedConditions.splice(idx, 1);
                           setCurrentRule({...currentRule, conditions: updatedConditions});
                         }}
-                        className={`p-2 rounded-full ${darkMode ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-100 hover:bg-gray-200'}`}
+                        className="p-2 rounded-full bg-gray-600 hover:bg-gray-500"
                       >
                         <DeleteIcon fontSize="small" className="text-red-500" />
                       </button>
@@ -662,22 +593,18 @@ const DatabaseRulesManager = () => {
       conditions: [...(currentRule.conditions || []), newCondition]
     });
   }}
-  className={`w-full py-2 px-3 border-dashed border-2 rounded-md flex items-center justify-center ${
-    darkMode 
-      ? 'border-gray-600 hover:border-gray-500 text-gray-300' 
-      : 'border-gray-300 hover:border-gray-400 text-gray-600'
-  }`}
+  className="w-full py-2 px-3 border-dashed border-2 rounded-md flex items-center justify-center border-gray-600 hover:border-gray-500 text-gray-300"
 >
   Add Condition
 </button>
                 </div>
               </div>
               
-              <div className={`p-4 rounded-lg ${darkMode ? 'bg-gray-750 border border-gray-700' : 'bg-gray-50 border border-gray-200'}`}>
+              <div className="p-4 rounded-lg bg-gray-750 border border-gray-700">
                 <label className="block text-sm font-medium mb-3">{getTranslatedText('maskingPolicy')}</label>
                 <div className="space-y-3">
                   {(currentRule.maskingPolicies || []).map((policy, idx) => (
-                    <div key={idx} className={`flex items-center gap-3 p-3 rounded-md ${darkMode ? 'bg-gray-700 border border-gray-600' : 'bg-white border border-gray-200'}`}>
+                    <div key={idx} className="flex items-center gap-3 p-3 rounded-md bg-gray-700 border border-gray-600">
                       <div className="flex-grow">
                         <input
                           type="text"
@@ -688,7 +615,7 @@ const DatabaseRulesManager = () => {
                             setCurrentRule({...currentRule, maskingPolicies: updatedPolicies});
                           }}
                           placeholder="Column name"
-                          className={`w-full p-2 border rounded-md ${darkMode ? 'bg-gray-600 border-gray-500 text-white placeholder-gray-400' : 'bg-white border-gray-300'}`}
+                          className="w-full p-2 border rounded-md bg-gray-600 border-gray-500 text-white placeholder-gray-400"
                         />
                       </div>
                       <div className="flex-grow">
@@ -699,7 +626,7 @@ const DatabaseRulesManager = () => {
                             updatedPolicies[idx] = {...policy, type: e.target.value};
                             setCurrentRule({...currentRule, maskingPolicies: updatedPolicies});
                           }}
-                          className={`w-full p-2 border rounded-md ${darkMode ? 'bg-gray-600 border-gray-500 text-white' : 'bg-white border-gray-300'}`}
+                          className="w-full p-2 border rounded-md bg-gray-600 border-gray-500 text-white"
                         >
                           {maskingTypes.map((type) => (
                             <option key={type.id} value={type.id}>{type.label}</option>
@@ -712,7 +639,7 @@ const DatabaseRulesManager = () => {
                           updatedPolicies.splice(idx, 1);
                           setCurrentRule({...currentRule, maskingPolicies: updatedPolicies});
                         }}
-                        className={`p-2 rounded-full ${darkMode ? 'bg-gray-600 hover:bg-gray-500' : 'bg-gray-100 hover:bg-gray-200'}`}
+                        className="p-2 rounded-full bg-gray-600 hover:bg-gray-500"
                       >
                         <DeleteIcon fontSize="small" className="text-red-500" />
                       </button>
@@ -729,11 +656,7 @@ const DatabaseRulesManager = () => {
       maskingPolicies: [...(currentRule.maskingPolicies || []), newPolicy]
     });
   }}
-  className={`w-full py-2 px-3 border-dashed border-2 rounded-md flex items-center justify-center ${
-    darkMode 
-      ? 'border-gray-600 hover:border-gray-500 text-gray-300' 
-      : 'border-gray-300 hover:border-gray-400 text-gray-600'
-  }`}
+  className="w-full py-2 px-3 border-dashed border-2 rounded-md flex items-center justify-center border-gray-600 hover:border-gray-500 text-gray-300"
 >
   Add Masking Policy
 </button>
@@ -744,10 +667,10 @@ const DatabaseRulesManager = () => {
             </div>
           )}
         </DialogContent>
-        <DialogActions className={`p-4 ${darkMode ? 'border-t border-gray-700' : 'border-t border-gray-200'}`}>
+        <DialogActions className="p-4 border-t border-gray-700">
           <button 
             onClick={handleCloseRuleEditor}
-            className={`px-4 py-2 rounded-md mr-2 ${darkMode ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
+            className="px-4 py-2 rounded-md mr-2 bg-gray-700 hover:bg-gray-600 text-white"
           >
             {getTranslatedText('cancel')}
           </button>
@@ -767,18 +690,18 @@ const DatabaseRulesManager = () => {
         maxWidth="md"
         fullWidth
         PaperProps={{
-          className: darkMode ? 'bg-gray-800 text-white' : 'bg-white'
+          className: 'bg-gray-800 text-white'
         }}
       >
-        <DialogTitle className={`border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+        <DialogTitle className="border-b border-gray-700">
           {getTranslatedText('testRule')}
         </DialogTitle>
         <DialogContent className="pt-4">
           {currentRule && (
             <div className="space-y-6 pt-4">
-              <div className={`p-4 rounded-md ${darkMode ? 'bg-gray-700 border border-gray-600' : 'bg-gray-50 border border-gray-200'}`}>
+              <div className="p-4 rounded-md bg-gray-700 border border-gray-600">
                 <h3 className="font-medium text-lg">{currentRule.name}</h3>
-                <p className={`text-sm mt-1 ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>{currentRule.description}</p>
+                <p className="text-sm mt-1 text-gray-300">{currentRule.description}</p>
               </div>
               
               <div>
@@ -787,25 +710,25 @@ const DatabaseRulesManager = () => {
                   value={testQuery}
                   onChange={(e) => setTestQuery(e.target.value)}
                   rows="5"
-                  className={`w-full p-3 border rounded-md font-mono text-sm ${darkMode ? 'bg-gray-700 border-gray-600 text-white' : 'bg-white border-gray-300'}`}
+                  className="w-full p-3 border rounded-md font-mono text-sm bg-gray-700 border-gray-600 text-white"
                 ></textarea>
               </div>
               
               {testResult && (
                 <div className={`p-5 rounded-md ${
                   testResult.passed ? 
-                    (darkMode ? 'bg-green-900/30 border border-green-700 text-green-100' : 'bg-green-50 border border-green-200 text-green-800') : 
-                    (darkMode ? 'bg-red-900/30 border border-red-700 text-red-100' : 'bg-red-50 border border-red-200 text-red-800')
+                    'bg-green-900/30 border border-green-700 text-green-100' : 
+                    'bg-red-900/30 border border-red-700 text-red-100'
                 }`}>
                   <h3 className="font-medium text-lg mb-3">{getTranslatedText('testResults')}</h3>
                   
-                  <div className={`mb-4 p-3 rounded ${darkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
+                  <div className="mb-4 p-3 rounded bg-gray-800 border border-gray-700">
                     <p className="font-medium flex items-center">
                       Status: 
                       <span className={`ml-2 px-2 py-1 rounded-full text-sm ${
                         testResult.passed ? 
-                          (darkMode ? 'bg-green-800 text-green-100' : 'bg-green-100 text-green-800') : 
-                          (darkMode ? 'bg-red-800 text-red-100' : 'bg-red-100 text-red-800')
+                          'bg-green-800 text-green-100' : 
+                          'bg-red-800 text-red-100'
                       }`}>
                         {testResult.passed ? 'Passed' : 'Failed'}
                       </span>
@@ -814,9 +737,9 @@ const DatabaseRulesManager = () => {
                   </div>
                   
                   {testResult.modifiedQuery && (
-                    <div className={`p-3 rounded ${darkMode ? 'bg-gray-800 border border-gray-700' : 'bg-white border border-gray-200'}`}>
+                    <div className="p-3 rounded bg-gray-800 border border-gray-700">
                       <p className="font-medium mb-2">Modified Query:</p>
-                      <pre className={`p-3 rounded font-mono text-sm overflow-x-auto ${darkMode ? 'bg-gray-900 text-gray-300' : 'bg-gray-50 text-gray-800'}`}>
+                      <pre className="p-3 rounded font-mono text-sm overflow-x-auto bg-gray-900 text-gray-300">
                         {testResult.modifiedQuery}
                       </pre>
                     </div>
@@ -826,10 +749,10 @@ const DatabaseRulesManager = () => {
             </div>
           )}
         </DialogContent>
-        <DialogActions className={`p-4 ${darkMode ? 'border-t border-gray-700' : 'border-t border-gray-200'}`}>
+        <DialogActions className="p-4 border-t border-gray-700">
           <button 
             onClick={handleCloseRuleTester}
-            className={`px-4 py-2 rounded-md mr-2 ${darkMode ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
+            className="px-4 py-2 rounded-md mr-2 bg-gray-700 hover:bg-gray-600 text-white"
           >
             {getTranslatedText('cancel')}
           </button>
@@ -847,26 +770,26 @@ const DatabaseRulesManager = () => {
         open={confirmDeleteOpen}
         onClose={handleCloseDeleteConfirm}
         PaperProps={{
-          className: darkMode ? 'bg-gray-800 text-white' : 'bg-white'
+          className: 'bg-gray-800 text-white'
         }}
       >
-        <DialogTitle className={`border-b ${darkMode ? 'border-gray-700' : 'border-gray-200'}`}>
+        <DialogTitle className="border-b border-gray-700">
           {getTranslatedText('deleteRule')}
         </DialogTitle>
         <DialogContent className="pt-4">
           <div className="pt-4">
             <p>{getTranslatedText('confirmDelete')}</p>
             {ruleToDelete && (
-              <div className={`mt-3 p-3 rounded-md ${darkMode ? 'bg-gray-700 border border-gray-600' : 'bg-gray-50 border border-gray-200'}`}>
+              <div className="mt-3 p-3 rounded-md bg-gray-700 border border-gray-600">
                 <span className="font-medium">"{ruleToDelete.name}"</span>
               </div>
             )}
           </div>
         </DialogContent>
-        <DialogActions className={`p-4 ${darkMode ? 'border-t border-gray-700' : 'border-t border-gray-200'}`}>
+        <DialogActions className="p-4 border-t border-gray-700">
           <button
             onClick={handleCloseDeleteConfirm}
-            className={`px-4 py-2 rounded-md mr-2 ${darkMode ? 'bg-gray-700 hover:bg-gray-600 text-white' : 'bg-gray-200 hover:bg-gray-300 text-gray-800'}`}
+            className="px-4 py-2 rounded-md mr-2 bg-gray-700 hover:bg-gray-600 text-white"
           >
             {getTranslatedText('cancel')}
           </button>
@@ -879,7 +802,7 @@ const DatabaseRulesManager = () => {
         </DialogActions>
       </Dialog>
       </main>
-      <footer className="mt-auto py-4 text-center backdrop-blur-sm bg-white/30 dark:bg-black/30">
+      <footer className="mt-auto py-4 text-center backdrop-blur-sm bg-black/30">
     <p className="text-sm">© 2025 Data Visualization Platform</p>
   </footer>
     </div>

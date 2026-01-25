@@ -18,26 +18,9 @@ export function MainPage() {
     "Multilingual",
     "Intuitive"
   ];
-  const [darkMode, setDarkMode] = useState(false);
   const [showVideo, setShowVideo] = useState(false);
   const videoRef = useRef(null);
 
-  useEffect(() => {
-    // Check for system preference
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-    
-    // Check for stored preference (localStorage)
-    const storedTheme = localStorage.getItem('theme');
-    
-    // Set initial theme based on stored preference or system preference
-    if (storedTheme) {
-      setDarkMode(storedTheme === 'dark');
-      document.documentElement.classList.toggle('dark', storedTheme === 'dark');
-    } else {
-      setDarkMode(prefersDark);
-      document.documentElement.classList.toggle('dark', prefersDark);
-    }
-  }, []);
   React.useEffect(() => {
     const handleScroll = () => {
       // Calculate which viewport (page) the user is on
@@ -50,25 +33,6 @@ export function MainPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
   const [rotation, setRotation] = React.useState(0);
-  // Listen for theme changes
-  useEffect(() => {
-    const handleThemeChange = (event) => {
-      const newTheme = event.detail.theme;
-      setDarkMode(newTheme === 'dark');
-      
-      // Update document class for Tailwind dark mode
-      document.documentElement.classList.toggle('dark', newTheme === 'dark');
-      
-      // Store preference
-      localStorage.setItem('theme', newTheme);
-    };
-    
-    window.addEventListener('themeChange', handleThemeChange);
-    
-    return () => {
-      window.removeEventListener('themeChange', handleThemeChange);
-    };
-  }, []);
   
   // Languages with their native scripts
   const languages = [
@@ -122,7 +86,7 @@ export function MainPage() {
   ];
 
   return (
-    <div className={`flex flex-col w-screen min-h-screen ${darkMode ? 'bg-gray-900 text-white' : 'bg-gray-50 text-gray-900'}`}>
+    <div className="flex flex-col w-screen min-h-screen bg-gray-900 text-white">
       {/* Add theme toggle button to Navbar */}
       <Navbar />
       
@@ -135,7 +99,7 @@ export function MainPage() {
     backgroundSize: 'cover',
     backgroundPosition: 'center',
     transform: `rotate(${rotation}deg) scale(0.95)`,
-    opacity: darkMode ? 0.6 : 0.7,
+    opacity: 0.6,
     transition: 'transform 0.5s ease, opacity 0.3s ease'
   }}
 />
@@ -166,7 +130,7 @@ export function MainPage() {
     transition={{ duration: 0.5, delay: 0.8 }}
     className="flex flex-wrap items-center justify-center"
   >
-    Your <FlipWords words={features} darkMode={darkMode} />visualization platform
+    Your <FlipWords words={features} />visualization platform
   </motion.div>
 </div>
 
@@ -176,7 +140,7 @@ export function MainPage() {
     transition={{ duration: 0.5, delay: 0.8 }}
     className="flex flex-wrap items-center justify-center"
   >
-    Your <FlipWords words={features} darkMode={darkMode} />visualization platform
+    Your <FlipWords words={features} />visualization platform
   </motion.div>
 
           <motion.p
@@ -195,22 +159,14 @@ export function MainPage() {
             className="mt-8 flex flex-wrap items-center justify-center gap-4"
           >
             <button 
-              className={`w-60 transform rounded-lg px-6 py-2 font-medium transition-all duration-300 hover:-translate-y-0.5 ${
-                darkMode 
-                  ? 'bg-blue-600 hover:bg-blue-700 text-white' 
-                  : 'bg-blue-500 hover:bg-blue-600 text-white'
-              }`}
+              className="w-60 transform rounded-lg px-6 py-2 font-medium transition-all duration-300 hover:-translate-y-0.5 bg-blue-600 hover:bg-blue-700 text-white"
               onClick={() => navigate('/dblist')}
             >
               Start Visualizing
             </button>
             <button 
               onClick={scrollToDemo}
-              className={`w-60 transform rounded-lg px-6 py-2 font-medium transition-all duration-300 hover:-translate-y-0.5 ${
-                darkMode 
-                  ? 'bg-green-600 hover:bg-green-700 text-white' 
-                  : 'bg-green-500 hover:bg-green-600 text-white'
-              }`}
+              className="w-60 transform rounded-lg px-6 py-2 font-medium transition-all duration-300 hover:-translate-y-0.5 bg-green-600 hover:bg-green-700 text-white"
             >
               View Demo
             </button>
@@ -222,9 +178,7 @@ export function MainPage() {
     initial={{ opacity: 0 }}
     whileInView={{ opacity: 1 }}
     viewport={{ once: false, margin: "-100px" }}
-    className={`text-center text-4xl font-bold mb-16 ${
-      darkMode ? 'text-slate-300' : 'text-slate-800'
-    }`}
+    className="text-center text-4xl font-bold mb-16 text-slate-300"
   >
     Powerful Query Visualization
   </motion.h2>
@@ -285,19 +239,11 @@ export function MainPage() {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3, delay: 2.1 }}
-            className={`relative z-10 mt-20 rounded-3xl border p-4 shadow-md ${
-              darkMode 
-                ? 'border-neutral-800 bg-neutral-900' 
-                : 'border-neutral-200 bg-neutral-100'
-            }`}
+            className="relative z-10 mt-20 rounded-3xl border p-4 shadow-md border-neutral-800 bg-neutral-900"
           >
-            <div className={`w-full overflow-hidden rounded-xl border ${
-              darkMode ? 'border-gray-700' : 'border-gray-300'
-            }`}>
+            <div className="w-full overflow-hidden rounded-xl border border-gray-700">
               <div className="aspect-[16/9] h-auto w-full bg-gradient-to-br from-blue-500 to-purple-600 p-8">
-                <div className={`flex h-full flex-col items-center justify-center text-white ${
-                  darkMode ? 'bg-gray-800' : 'bg-gray-900'
-                } p-8 rounded-xl`}>
+                <div className="flex h-full flex-col items-center justify-center text-white bg-gray-800 p-8 rounded-xl">
                   <div className="text-3xl font-bold mb-6">Speech Visualization Demo</div>
                   
                   {!showVideo ? (
@@ -344,7 +290,7 @@ export function MainPage() {
           </motion.div>
         </div>
       </div>
-      <footer className="mt-auto py-4 text-center backdrop-blur-sm bg-white/30 dark:bg-black/30">
+      <footer className="mt-auto py-4 text-center backdrop-blur-sm bg-black/30">
         <p className="text-sm">© 2025 Data Visualization Platform</p>
       </footer>
     </div>

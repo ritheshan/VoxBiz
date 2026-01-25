@@ -37,9 +37,6 @@ const Toast = ({ message, type, isVisible, onClose }) => {
 const Signup = () => {
   const navigate = useNavigate();
 
-  const [theme, setTheme] = useState('dark');
-  const [language, setLanguage] = useState('english');
-  const [showMenu, setShowMenu] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [formData, setFormData] = useState({
     username: '',
@@ -121,36 +118,6 @@ const Signup = () => {
     
     setErrors(newErrors);
     return !newErrors.username && !newErrors.email && !newErrors.password;
-  };
-
-  const toggleTheme = (newTheme) => {
-    setTheme(newTheme);
-    setShowMenu(false);
-    showToast(`Switched to ${newTheme} mode`, 'success');
-  };
-
-  const changeLanguage = async (newLanguage) => {
-    setLanguage(newLanguage);
-    
-    if (newLanguage !== 'english') {
-      showToast(`Language changed to ${newLanguage}`, 'info');
-    } else {
-      setTranslations({
-        googleSignUp: 'Sign up with Google',
-        or: 'or',
-        username: 'Username',
-        email: 'Email',
-        password: 'Password',
-        createAccount: 'Create your account',
-        alreadyHaveAccount: 'Already have an account?',
-        signinHere: 'Sign in Here',
-        oneClick: 'One click to start',
-        allDigital: 'your journey.',
-        creatingAccount: 'Creating account...'
-      });
-    }
-    
-    setShowMenu(false);
   };
 
   const handleInputChange = (e) => {
@@ -255,40 +222,8 @@ const Signup = () => {
     }
   };
 
-  // Theme-based styles
-  const themeStyles = {
-    dark: {
-      bg: 'bg-black',
-      cardBg: 'bg-white/5',
-      text: 'text-white',
-      textSecondary: 'text-gray-300',
-      textMuted: 'text-gray-400',
-      border: 'border-white/10',
-      inputBg: 'bg-white/10',
-      inputBorder: 'border-white/20',
-      menuBg: 'bg-white/10',
-      buttonBg: 'bg-white/10',
-      buttonHover: 'hover:bg-white/20'
-    },
-    light: {
-      bg: 'bg-gray-50',
-      cardBg: 'bg-white',
-      text: 'text-gray-900',
-      textSecondary: 'text-gray-700',
-      textMuted: 'text-gray-500',
-      border: 'border-gray-200',
-      inputBg: 'bg-gray-50',
-      inputBorder: 'border-gray-300',
-      menuBg: 'bg-white',
-      buttonBg: 'bg-gray-100',
-      buttonHover: 'hover:bg-gray-200'
-    }
-  };
-
-  const currentTheme = themeStyles[theme];
-
   return (
-    <div className={`${currentTheme.bg} w-screen h-screen flex items-center justify-center transition-colors duration-300`}>
+    <div className="bg-black w-screen h-screen flex items-center justify-center transition-colors duration-300">
       {/* Toast Component */}
       <Toast 
         message={toast.message}
@@ -299,8 +234,8 @@ const Signup = () => {
       
       {/* Animated Background */}
       <div className="absolute inset-0 pointer-events-none">
-        <div className={`absolute top-1/4 left-1/4 w-64 h-64 ${theme === 'dark' ? 'bg-blue-500/5' : 'bg-blue-500/10'} rounded-full blur-3xl animate-pulse`}></div>
-        <div className={`absolute bottom-1/4 right-1/4 w-64 h-64 ${theme === 'dark' ? 'bg-purple-500/5' : 'bg-purple-500/10'} rounded-full blur-3xl animate-pulse delay-1000`}></div>
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-blue-500/5 rounded-full blur-3xl animate-pulse"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-purple-500/5 rounded-full blur-3xl animate-pulse delay-1000"></div>
       </div>
 
       <div className="relative z-10 w-full max-w-lg mx-auto px-6">
@@ -311,60 +246,11 @@ const Signup = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 19a2 2 0 01-2-2V7a2 2 0 012-2h4l2 2h4a2 2 0 012 2v1M5 19h14a2 2 0 002-2v-5a2 2 0 00-2-2H9a2 2 0 00-2 2v5a2 2 0 01-2 2z" />
             </svg>
           </div>
-          
-          <div className="relative">
-            <button 
-              onClick={() => setShowMenu(!showMenu)}
-              className={`${currentTheme.buttonBg} ${currentTheme.buttonHover} ${currentTheme.border} backdrop-blur-sm border p-2 rounded-lg transition-all duration-300 transform active:scale-95`}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className={`h-5 w-5 ${currentTheme.text}`} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16m-7 6h7" />
-              </svg>
-            </button>
-            
-            {showMenu && (
-              <div className={`absolute right-0 mt-2 w-40 rounded-xl shadow-lg py-2 ${currentTheme.menuBg} ${currentTheme.border} backdrop-blur-xl border z-50`}>
-                <div className={`px-3 py-2 text-xs font-medium border-b ${currentTheme.border} text-cyan-400`}>Theme</div>
-                <button
-                  onClick={() => toggleTheme('light')}
-                  className={`w-full text-left block px-3 py-2 text-sm ${currentTheme.textSecondary} ${currentTheme.buttonHover} transition-all duration-200 active:scale-95`}
-                >
-                  Light Mode
-                </button>
-                <button
-                  onClick={() => toggleTheme('dark')}
-                  className={`w-full text-left block px-3 py-2 text-sm ${currentTheme.textSecondary} ${currentTheme.buttonHover} transition-all duration-200 active:scale-95`}
-                >
-                  Dark Mode
-                </button>
-                
-                <div className={`px-3 py-2 text-xs font-medium border-b border-t ${currentTheme.border} text-cyan-400 mt-2`}>Language</div>
-                <button
-                  onClick={() => changeLanguage('english')}
-                  className={`w-full text-left block px-3 py-2 text-sm ${currentTheme.textSecondary} ${currentTheme.buttonHover} transition-all duration-200 active:scale-95`}
-                >
-                  English
-                </button>
-                <button     
-                  onClick={() => changeLanguage('hindi')}
-                  className={`w-full text-left block px-3 py-2 text-sm ${currentTheme.textSecondary} ${currentTheme.buttonHover} transition-all duration-200 active:scale-95`}
-                >
-                  Hindi
-                </button>
-                <button
-                  onClick={() => changeLanguage('kannada')}
-                  className={`w-full text-left block px-3 py-2 text-sm ${currentTheme.textSecondary} ${currentTheme.buttonHover} transition-all duration-200 active:scale-95`}
-                >
-                  Kannada
-                </button>
-              </div>
-            )}
-          </div>
         </div>
 
         {/* Welcome Badge */}
         <div className="flex justify-center mb-4">
-          <div className={`inline-flex items-center gap-2 ${currentTheme.cardBg} ${currentTheme.border} backdrop-blur-sm px-4 py-2 rounded-full border`}>
+          <div className="inline-flex items-center gap-2 bg-white/5 border-white/10 backdrop-blur-sm px-4 py-2 rounded-full border">
             <div className="w-2 h-2 bg-cyan-400 rounded-full animate-pulse"></div>
             <span className="text-cyan-400 font-medium text-sm">
               {"Get Started".split("").map((char, index) => (
@@ -385,7 +271,7 @@ const Signup = () => {
         </div>
         
         {/* Title */}
-        <div className={`text-center ${currentTheme.text} mb-8`}>
+        <div className="text-center text-white mb-8">
           <h1 className="text-2xl md:text-3xl font-bold flex flex-wrap justify-center items-center gap-2">
             <span>
               {translations.oneClick.split("").map((char, index) => (
@@ -421,13 +307,13 @@ const Signup = () => {
         </div>
 
         {/* Signup Form */}
-        <div className={`${currentTheme.cardBg} ${currentTheme.border} backdrop-blur-xl p-6 rounded-2xl border shadow-xl`}>
-          <h2 className={`text-xl font-bold ${currentTheme.text} text-center mb-6`}>{translations.createAccount}</h2>
+        <div className="bg-white/5 border-white/10 backdrop-blur-xl p-6 rounded-2xl border shadow-xl">
+          <h2 className="text-xl font-bold text-white text-center mb-6">{translations.createAccount}</h2>
           
           <button
             onClick={handleGoogleSignUp}
             disabled={isLoading}
-            className={`flex items-center justify-center w-full ${currentTheme.buttonBg} ${currentTheme.buttonHover} ${currentTheme.border} ${currentTheme.text} backdrop-blur-sm border rounded-xl py-2.5 px-4 mb-4 transition-all duration-300 transform hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-xl`}
+            className="flex items-center justify-center w-full bg-white/10 hover:bg-white/20 border-white/10 text-white backdrop-blur-sm border rounded-xl py-2.5 px-4 mb-4 transition-all duration-300 transform hover:scale-[1.02] active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-lg hover:shadow-xl"
           >
             {isLoading ? (
               <div className="flex items-center">
@@ -448,20 +334,20 @@ const Signup = () => {
           </button>
           
           <div className="flex items-center justify-center my-4">
-            <div className={`border-t ${currentTheme.border} flex-grow`}></div>
-            <span className={`px-3 ${currentTheme.textMuted} text-sm`}>{translations.or}</span>
-            <div className={`border-t ${currentTheme.border} flex-grow`}></div>
+            <div className="border-t border-white/10 flex-grow"></div>
+            <span className="px-3 text-gray-400 text-sm">{translations.or}</span>
+            <div className="border-t border-white/10 flex-grow"></div>
           </div>
           
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
-              <label className={`block text-sm font-medium ${currentTheme.textSecondary} mb-1`}>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 {translations.username}<span className="text-red-400">*</span>
               </label>
               <input
                 type="text"
                 name="username"
-                className={`w-full p-2.5 ${currentTheme.inputBg} ${errors.username ? 'border-red-400 focus:border-red-400 focus:ring-red-400' : `${currentTheme.inputBorder} focus:border-cyan-400 focus:ring-cyan-400`} ${currentTheme.text} backdrop-blur-sm border rounded-lg placeholder-gray-400 focus:ring-1 transition-all duration-300`}
+                className={`w-full p-2.5 bg-white/10 ${errors.username ? 'border-red-400 focus:border-red-400 focus:ring-red-400' : 'border-white/20 focus:border-cyan-400 focus:ring-cyan-400'} text-white backdrop-blur-sm border rounded-lg placeholder-gray-400 focus:ring-1 transition-all duration-300`}
                 placeholder="Enter your username"
                 value={formData.username}
                 onChange={handleInputChange}
@@ -478,13 +364,13 @@ const Signup = () => {
             </div>
 
             <div>
-              <label className={`block text-sm font-medium ${currentTheme.textSecondary} mb-1`}>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 {translations.email}<span className="text-red-400">*</span>
               </label>
               <input
                 type="email"
                 name="email"
-                className={`w-full p-2.5 ${currentTheme.inputBg} ${errors.email ? 'border-red-400 focus:border-red-400 focus:ring-red-400' : `${currentTheme.inputBorder} focus:border-cyan-400 focus:ring-cyan-400`} ${currentTheme.text} backdrop-blur-sm border rounded-lg placeholder-gray-400 focus:ring-1 transition-all duration-300`}
+                className={`w-full p-2.5 bg-white/10 ${errors.email ? 'border-red-400 focus:border-red-400 focus:ring-red-400' : 'border-white/20 focus:border-cyan-400 focus:ring-cyan-400'} text-white backdrop-blur-sm border rounded-lg placeholder-gray-400 focus:ring-1 transition-all duration-300`}
                 placeholder="Enter your email"
                 value={formData.email}
                 onChange={handleInputChange}
@@ -501,13 +387,13 @@ const Signup = () => {
             </div>
             
             <div>
-              <label className={`block text-sm font-medium ${currentTheme.textSecondary} mb-1`}>
+              <label className="block text-sm font-medium text-gray-300 mb-1">
                 {translations.password}<span className="text-red-400">*</span>
               </label>
               <input
                 type="password"
                 name="password"
-                className={`w-full p-2.5 ${currentTheme.inputBg} ${errors.password ? 'border-red-400 focus:border-red-400 focus:ring-red-400' : `${currentTheme.inputBorder} focus:border-cyan-400 focus:ring-cyan-400`} ${currentTheme.text} backdrop-blur-sm border rounded-lg placeholder-gray-400 focus:ring-1 transition-all duration-300`}
+                className={`w-full p-2.5 bg-white/10 ${errors.password ? 'border-red-400 focus:border-red-400 focus:ring-red-400' : 'border-white/20 focus:border-cyan-400 focus:ring-cyan-400'} text-white backdrop-blur-sm border rounded-lg placeholder-gray-400 focus:ring-1 transition-all duration-300`}
                 placeholder="Enter your password"
                 value={formData.password}
                 onChange={handleInputChange}
@@ -540,7 +426,7 @@ const Signup = () => {
           </form>
           
           <div className="mt-4 text-center">
-            <p className={`${currentTheme.textMuted} text-sm`}>
+            <p className="text-gray-400 text-sm">
               {translations.alreadyHaveAccount}{' '}
               <button
                 onClick={() => navigate('/login')}

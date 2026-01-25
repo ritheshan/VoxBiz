@@ -21,7 +21,7 @@ import EmailIcon from '@mui/icons-material/Email';
 import DownloadIcon from '@mui/icons-material/Download';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 
-const EmailDataModal = ({ open, onClose, data, tableTitle, darkMode }) => {
+const EmailDataModal = ({ open, onClose, data, tableTitle }) => {
   const [email, setEmail] = useState('');
   const [subject, setSubject] = useState(`${tableTitle} Data Export`);
   const [message, setMessage] = useState(`Here is the requested data for ${tableTitle}.`);
@@ -171,8 +171,8 @@ const EmailDataModal = ({ open, onClose, data, tableTitle, darkMode }) => {
         fullWidth
         PaperProps={{
           sx: {
-            bgcolor: darkMode ? '#1E1E1E' : '#FFFFFF',
-            color: darkMode ? '#FFFFFF' : 'inherit',
+            bgcolor: '#1E1E1E',
+            color: '#FFFFFF',
           }
         }}
       >
@@ -185,9 +185,9 @@ const EmailDataModal = ({ open, onClose, data, tableTitle, darkMode }) => {
               position: 'absolute', 
               right: 8, 
               top: 8, 
-              color: darkMode ? '#FFFFFF' : 'inherit',
+              color: '#FFFFFF',
               '&.Mui-disabled': {
-                color: darkMode ? 'rgba(255,255,255,0.3)' : 'rgba(0,0,0,0.3)'
+                color: 'rgba(255,255,255,0.3)'
               }
             }}
           >
@@ -204,7 +204,7 @@ const EmailDataModal = ({ open, onClose, data, tableTitle, darkMode }) => {
               <Box sx={{ 
                 p: 2, 
                 border: '1px dashed', 
-                borderColor: darkMode ? 'rgba(255,255,255,0.23)' : 'rgba(0,0,0,0.23)',
+                borderColor: 'rgba(255,255,255,0.23)',
                 borderRadius: 1,
                 display: 'flex',
                 alignItems: 'center',
@@ -236,13 +236,13 @@ const EmailDataModal = ({ open, onClose, data, tableTitle, darkMode }) => {
               required
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  color: darkMode ? '#FFFFFF' : 'inherit',
+                  color: '#FFFFFF',
                   '& fieldset': {
-                    borderColor: darkMode ? 'rgba(255,255,255,0.23)' : 'rgba(0,0,0,0.23)',
+                    borderColor: 'rgba(255,255,255,0.23)',
                   },
                 },
                 '& .MuiInputLabel-root': {
-                  color: darkMode ? 'rgba(255,255,255,0.7)' : 'inherit',
+                  color: 'rgba(255,255,255,0.7)',
                 }
               }}
             />
@@ -255,13 +255,13 @@ const EmailDataModal = ({ open, onClose, data, tableTitle, darkMode }) => {
               margin="normal"
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  color: darkMode ? '#FFFFFF' : 'inherit',
+                  color: '#FFFFFF',
                   '& fieldset': {
-                    borderColor: darkMode ? 'rgba(255,255,255,0.23)' : 'rgba(0,0,0,0.23)',
+                    borderColor: 'rgba(255,255,255,0.23)',
                   },
                 },
                 '& .MuiInputLabel-root': {
-                  color: darkMode ? 'rgba(255,255,255,0.7)' : 'inherit',
+                  color: 'rgba(255,255,255,0.7)',
                 }
               }}
             />
@@ -276,13 +276,13 @@ const EmailDataModal = ({ open, onClose, data, tableTitle, darkMode }) => {
               margin="normal"
               sx={{
                 '& .MuiOutlinedInput-root': {
-                  color: darkMode ? '#FFFFFF' : 'inherit',
+                  color: '#FFFFFF',
                   '& fieldset': {
-                    borderColor: darkMode ? 'rgba(255,255,255,0.23)' : 'rgba(0,0,0,0.23)',
+                    borderColor: 'rgba(255,255,255,0.23)',
                   },
                 },
                 '& .MuiInputLabel-root': {
-                  color: darkMode ? 'rgba(255,255,255,0.7)' : 'inherit',
+                  color: 'rgba(255,255,255,0.7)',
                 }
               }}
             />
@@ -293,9 +293,9 @@ const EmailDataModal = ({ open, onClose, data, tableTitle, darkMode }) => {
                   checked={sendCopy} 
                   onChange={(e) => setSendCopy(e.target.checked)}
                   sx={{
-                    color: darkMode ? 'rgba(255,255,255,0.7)' : undefined,
+                    color: 'rgba(255,255,255,0.7)',
                     '&.Mui-checked': {
-                      color: darkMode ? 'primary.light' : undefined,
+                      color: 'primary.light',
                     }
                   }}
                 />
@@ -303,7 +303,7 @@ const EmailDataModal = ({ open, onClose, data, tableTitle, darkMode }) => {
               label="Send me a copy"
               sx={{ 
                 mt: 1, 
-                color: darkMode ? '#FFFFFF' : 'inherit' 
+                color: '#FFFFFF' 
               }}
             />
           </Box>

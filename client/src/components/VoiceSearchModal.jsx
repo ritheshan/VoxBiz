@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Mic, MicOff } from 'lucide-react';
 
-const VoiceSearchModal = ({ darkMode, onClose, onQuery }) => {
+const VoiceSearchModal = ({ onClose, onQuery }) => {
   const [isListening, setIsListening] = useState(false);
   const [transcript, setTranscript] = useState('');
   const [message, setMessage] = useState('Click the microphone to start speaking');
@@ -81,7 +81,7 @@ const VoiceSearchModal = ({ darkMode, onClose, onQuery }) => {
   
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className={`rounded-lg p-6 max-w-md w-full ${darkMode ? 'bg-slate-800' : 'bg-white'}`}>
+      <div className="rounded-lg p-6 max-w-md w-full bg-slate-800 text-white">
         <h2 className="text-xl font-bold mb-4">Query Database</h2>
         
         <div className="flex flex-col items-center space-y-4">
@@ -89,18 +89,14 @@ const VoiceSearchModal = ({ darkMode, onClose, onQuery }) => {
             {!isListening ? (
               <button
                 onClick={startListening}
-                className={`p-6 rounded-full transition-all ${
-                  darkMode ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-indigo-500 hover:bg-indigo-600'
-                } text-white`}
+                className="p-6 rounded-full transition-all bg-indigo-600 hover:bg-indigo-700 text-white"
               >
                 <Mic className="h-8 w-8" />
               </button>
             ) : (
               <button
                 onClick={stopListening}
-                className={`p-6 rounded-full transition-all ${
-                  darkMode ? 'bg-red-600 animate-pulse' : 'bg-red-500 animate-pulse'
-                } text-white`}
+                className="p-6 rounded-full transition-all bg-red-600 animate-pulse text-white"
               >
                 <MicOff className="h-8 w-8" />
               </button>
@@ -109,22 +105,20 @@ const VoiceSearchModal = ({ darkMode, onClose, onQuery }) => {
             {isListening && (
               <button
                 onClick={stopListening}
-                className={`px-4 py-2 self-center rounded-lg ${
-                  darkMode ? 'bg-indigo-600 hover:bg-indigo-700' : 'bg-indigo-500 hover:bg-indigo-600'
-                } text-black`}
+                className="px-4 py-2 self-center rounded-lg bg-indigo-600 hover:bg-indigo-700 text-white"
               >
                 Done
               </button>
             )}
           </div>
           
-          <p className={`text-sm text-center ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+          <p className="text-sm text-center text-gray-300">
             {message}
           </p>
           
           {transcript && (
-            <div className={`mt-4 p-4 rounded-lg w-full ${darkMode ? 'bg-slate-700' : 'bg-gray-100'}`}>
-              <p className={`text-sm font-medium ${darkMode ? 'text-gray-300' : 'text-gray-600'}`}>
+            <div className="mt-4 p-4 rounded-lg w-full bg-slate-700">
+              <p className="text-sm font-medium text-gray-300">
                 Your query:
               </p>
               <p className="text-lg mt-1">{transcript}</p>
@@ -135,11 +129,7 @@ const VoiceSearchModal = ({ darkMode, onClose, onQuery }) => {
         <div className="flex justify-between mt-6">
           <button
             onClick={onClose}
-            className={`px-4 py-2 rounded-lg ${
-              darkMode 
-                ? 'bg-slate-700 hover:bg-slate-600' 
-                : 'bg-gray-200 hover:bg-gray-300'
-            }`}
+            className="px-4 py-2 rounded-lg bg-slate-700 hover:bg-slate-600"
           >
             Cancel
           </button>

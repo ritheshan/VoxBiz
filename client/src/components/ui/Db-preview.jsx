@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { API_BASE_URL } from '../../lib/api';
 
-export const DbPreviewOption = ({ dbId, dbName, darkMode }) => {
+export const DbPreviewOption = ({ dbId, dbName }) => {
   const [isHovering, setIsHovering] = useState(false);
   const [previewData, setPreviewData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -82,11 +82,11 @@ export const DbPreviewOption = ({ dbId, dbName, darkMode }) => {
       width: '400px',
       maxHeight: '500px',
       overflowY: 'auto',
-      background: darkMode ? '#1e1e1e' : 'white',
+      background: '#1e1e1e',
       borderRadius: '8px',
-      boxShadow: darkMode ? '0 8px 32px rgba(0, 0, 0, 0.6)' : '0 8px 32px rgba(0, 0, 0, 0.2)',
-      border: darkMode ? '1px solid #374151' : '1px solid #e5e7eb',
-      color: darkMode ? '#e0e0e0' : '#1f2937'
+      boxShadow: '0 8px 32px rgba(0, 0, 0, 0.6)',
+      border: '1px solid #374151',
+      color: '#e0e0e0'
     };
     
     return (
@@ -98,8 +98,8 @@ export const DbPreviewOption = ({ dbId, dbName, darkMode }) => {
           left: Math.max(20, buttonRect.left + buttonRect.width/2 - Math.max(16, Math.min(buttonRect.left, window.innerWidth - 416))),
           width: '16px',
           height: '16px',
-          background: darkMode ? '#1e1e1e' : 'white',
-          border: darkMode ? '1px solid #374151' : '1px solid #e5e7eb',
+          background: '#1e1e1e',
+          border: '1px solid #374151',
           borderBottom: 'none',
           borderRight: 'none',
           transform: 'rotate(45deg)'
@@ -108,8 +108,8 @@ export const DbPreviewOption = ({ dbId, dbName, darkMode }) => {
         {isLoading ? (
           <div style={{ padding: '24px', textAlign: 'center' }}>
             <div style={{
-              border: darkMode ? '3px solid rgba(255, 255, 255, 0.1)' : '3px solid rgba(0, 0, 0, 0.1)',
-              borderTopColor: darkMode ? '#6366f1' : '#3b82f6',
+              border: '3px solid rgba(255, 255, 255, 0.1)',
+              borderTopColor: '#6366f1',
               borderRadius: '50%',
               width: '24px',
               height: '24px',
@@ -127,8 +127,8 @@ export const DbPreviewOption = ({ dbId, dbName, darkMode }) => {
             {/* Header */}
             <div style={{
               padding: '16px',
-              borderBottom: darkMode ? '1px solid #374151' : '1px solid #e5e7eb',
-              background: darkMode ? '#111827' : '#f9fafb'
+              borderBottom: '1px solid #374151',
+              background: '#111827'
             }}>
               <h3 style={{ margin: '0', fontSize: '16px', fontWeight: '600' }}>
                 {dbName} - Preview
@@ -138,8 +138,8 @@ export const DbPreviewOption = ({ dbId, dbName, darkMode }) => {
             {/* Database preview content */}
             <div style={{ padding: '16px' }}>
               <div style={{
-                background: darkMode ? '#111827' : '#f8fafc',
-                border: darkMode ? '1px solid #374151' : '1px solid #e2e8f0',
+                background: '#111827',
+                border: '1px solid #374151',
                 borderRadius: '6px',
                 fontFamily: 'monospace',
                 fontSize: '13px',
@@ -149,20 +149,20 @@ export const DbPreviewOption = ({ dbId, dbName, darkMode }) => {
                 {/* Database header */}
                 <div style={{
                   padding: '12px',
-                  background: darkMode ? '#1f2937' : '#e2e8f0',
+                  background: '#1f2937',
                   display: 'flex',
                   justifyContent: 'space-between',
                   alignItems: 'center',
-                  borderBottom: darkMode ? '1px solid #374151' : '1px solid #cbd5e1'
+                  borderBottom: '1px solid #374151'
                 }}>
                   <span style={{ fontWeight: 'bold', fontSize: '14px' }}>
                     {previewData.name}
                   </span>
                   <span style={{
-                    color: darkMode ? '#9ca3af' : '#64748b',
+                    color: '#9ca3af',
                     fontSize: '12px',
                     padding: '2px 8px',
-                    background: darkMode ? '#374151' : '#cbd5e1',
+                    background: '#374151',
                     borderRadius: '4px'
                   }}>
                     {previewData.type}
@@ -172,8 +172,8 @@ export const DbPreviewOption = ({ dbId, dbName, darkMode }) => {
                 {/* Description */}
                 <div style={{
                   padding: '12px',
-                  borderBottom: darkMode ? '1px solid #374151' : '1px solid #cbd5e1',
-                  color: darkMode ? '#9ca3af' : '#64748b',
+                  borderBottom: '1px solid #374151',
+                  color: '#9ca3af',
                   fontStyle: 'italic',
                   fontSize: '12px'
                 }}>
@@ -185,7 +185,7 @@ export const DbPreviewOption = ({ dbId, dbName, darkMode }) => {
                   <div style={{
                     fontWeight: 'bold',
                     marginBottom: '8px',
-                    color: darkMode ? '#d1d5db' : '#374151'
+                    color: '#d1d5db'
                   }}>
                     Tables ({previewData.tableCount})
                   </div>
@@ -196,13 +196,13 @@ export const DbPreviewOption = ({ dbId, dbName, darkMode }) => {
                         <div key={idx} style={{ padding: '4px 0' }}>
                           <span style={{
                             fontWeight: 'bold',
-                            color: darkMode ? '#6366f1' : '#2563eb'
+                            color: '#6366f1'
                           }}>
                             {table}
                           </span>
                           {previewData.sampleColumns[table] && (
                             <span style={{
-                              color: darkMode ? '#9ca3af' : '#64748b',
+                              color: '#9ca3af',
                               fontSize: '12px',
                               marginLeft: '6px'
                             }}>
@@ -214,7 +214,7 @@ export const DbPreviewOption = ({ dbId, dbName, darkMode }) => {
                       ))}
                       {previewData.tableCount > 8 && (
                         <div style={{
-                          color: darkMode ? '#9ca3af' : '#64748b',
+                          color: '#9ca3af',
                           fontStyle: 'italic',
                           padding: '4px 0'
                         }}>
@@ -224,7 +224,7 @@ export const DbPreviewOption = ({ dbId, dbName, darkMode }) => {
                     </div>
                   ) : (
                     <div style={{
-                      color: darkMode ? '#9ca3af' : '#64748b',
+                      color: '#9ca3af',
                       fontStyle: 'italic',
                       padding: '4px 0'
                     }}>
@@ -266,7 +266,7 @@ export const DbPreviewOption = ({ dbId, dbName, darkMode }) => {
         style={{
           background: 'none',
           border: 'none',
-          color: darkMode ? '#6366f1' : '#2563eb',
+          color: '#6366f1',
           textDecoration: 'underline',
           cursor: 'pointer',
           padding: '4px 8px',

@@ -5,7 +5,7 @@ import Loader from "./ui/Loader";
 import axios from "axios";
 import { API_BASE_URL } from "../lib/api";
 
-const CreateDatabaseModal = ({ darkMode, onClose }) => {
+const CreateDatabaseModal = ({ onClose }) => {
   const [step, setStep] = useState("initial");
   const [choice, setChoice] = useState(null); // postgres or excel
   const [file, setFile] = useState(null);
@@ -179,8 +179,8 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
   };
 
   return (
-    <div className={`fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50`}>
-      <div className={`relative w-full max-w-2xl mx-2 md:mx-auto p-6 rounded-lg shadow-xl ${darkMode ? 'bg-gray-800 text-white' : 'bg-white text-gray-900'}`}>
+    <div className="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+      <div className="relative w-full max-w-2xl mx-2 md:mx-auto p-6 rounded-lg shadow-xl bg-gray-800 text-white">
         <button
           onClick={onClose}
           className="absolute top-4 right-4 text-gray-400 hover:text-gray-600"
@@ -193,7 +193,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
         <h2 className="text-xl font-bold mb-4">Create Database</h2>
 
         {error && (
-          <div className={`p-3 mb-4 rounded-md ${darkMode ? 'bg-red-900 text-red-100' : 'bg-red-100 text-red-800'}`}>
+          <div className="p-3 mb-4 rounded-md bg-red-900 text-red-100">
             {error}
           </div>
         )}
@@ -207,7 +207,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                   setChoice("postgres");
                   setStep("postgres");
                 }}
-                className={`px-4 py-2 rounded-lg ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+                className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
               >
                 Connect PostgreSQL DB
               </button>
@@ -216,7 +216,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                   setChoice("excel");
                   setStep("excel");
                 }}
-                className={`px-4 py-2 rounded-lg ${darkMode ? 'bg-green-600 hover:bg-green-700' : 'bg-green-500 hover:bg-green-600'} text-white`}
+                className="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white"
               >
                 Upload Excel/CSV
               </button>
@@ -226,7 +226,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
 
         {step === "postgres" && (
           <div>
-            <div className={`mb-6 p-4 rounded-lg ${darkMode ? 'bg-blue-900 text-blue-100' : 'bg-blue-100 text-blue-800'}`}>
+            <div className="mb-6 p-4 rounded-lg bg-blue-900 text-blue-100">
               <h3 className="font-bold mb-2">Important Information</h3>
               <p className="mb-2">Please ensure you have the following information ready:</p>
               <ul className="list-disc list-inside space-y-1 text-sm">
@@ -250,7 +250,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                 setError(""); // Clear any existing errors
                 setStep("form");
               }}
-              className={`w-full py-2 rounded-lg ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+              className="w-full py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
             >
               {error ? "Retry" : "I'm Ready to Continue"}
             </button>
@@ -259,13 +259,13 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
 
         {step === "excel" && (
           <div>
-            <div className={`mb-6 p-4 rounded-lg ${darkMode ? 'bg-blue-900 text-blue-100' : 'bg-blue-100 text-blue-800'}`}>
+            <div className="mb-6 p-4 rounded-lg bg-blue-900 text-blue-100">
               <h3 className="font-bold mb-2">Upload Your Excel or CSV File</h3>
               <p className="mb-2">Please upload your data file and we'll create a database from it.</p>
               <p className="text-sm">After upload, you'll receive database credentials that you can access in the database details page.</p>
             </div>
 
-            <div {...getRootProps()} className={`border-2 border-dashed rounded-lg p-6 mb-4 text-center cursor-pointer ${darkMode ? 'border-gray-600 hover:border-gray-500' : 'border-gray-300 hover:border-gray-400'}`}>
+            <div {...getRootProps()} className="border-2 border-dashed rounded-lg p-6 mb-4 text-center cursor-pointer border-gray-600 hover:border-gray-500">
               <input {...getInputProps()} />
               {file ? (
                 <p>Selected file: {file.name}</p>
@@ -285,7 +285,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                   setError(""); // Clear any existing errors
                   setStep("form");
                 }}
-                className={`w-full py-2 rounded-lg ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+                className="w-full py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
               >
                 {error ? "Retry" : "Continue"}
               </button>
@@ -308,7 +308,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                   value={formData.dbName}
                   onChange={handleInputChange}
                   required
-                  className={`w-full px-3 py-2 rounded-md ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'} border`}
+                  className="w-full px-3 py-2 rounded-md bg-gray-700 text-white border-gray-600 border"
                 />
               </div>
 
@@ -323,7 +323,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                       onChange={handleInputChange}
                       required
                       placeholder="postgresql://username:password@host:port/database"
-                      className={`w-full px-3 py-2 rounded-md ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'} border`}
+                      className="w-full px-3 py-2 rounded-md bg-gray-700 text-white border-gray-600 border"
                     />
                   </div>
                   {/* <div>
@@ -334,7 +334,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                       value={formData.username}
                       onChange={handleInputChange}
                       required
-                      className={`w-full px-3 py-2 rounded-md ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'} border`}
+                      className="w-full px-3 py-2 rounded-md bg-gray-700 text-white border-gray-600 border"
                     />
                   </div>
                   <div>
@@ -345,7 +345,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                       value={formData.password}
                       onChange={handleInputChange}
                       required
-                      className={`w-full px-3 py-2 rounded-md ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'} border`}
+                      className="w-full px-3 py-2 rounded-md bg-gray-700 text-white border-gray-600 border"
                     />
                   </div> */}
                 </>
@@ -354,7 +354,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
 
             <button
               type="submit"
-              className={`w-full py-2 rounded-lg ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+              className="w-full py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
             >
               {error ? "Retry" : "Continue"}
             </button>
@@ -381,12 +381,8 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                     setInputType("voice");
                   }}
                   className={`px-4 py-2 rounded-lg ${inputType === "voice"
-                    ? darkMode
                       ? "bg-blue-600"
-                      : "bg-blue-500"
-                    : darkMode
-                      ? "bg-gray-700"
-                      : "bg-gray-200"
+                      : "bg-gray-700"
                     }`}
                 >
                   Voice Input
@@ -397,12 +393,8 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                     setInputType("text");
                   }}
                   className={`px-4 py-2 rounded-lg ${inputType === "text"
-                    ? darkMode
                       ? "bg-blue-600"
-                      : "bg-blue-500"
-                    : darkMode
-                      ? "bg-gray-700"
-                      : "bg-gray-200"
+                      : "bg-gray-700"
                     }`}
                 >
                   Text Input
@@ -417,8 +409,8 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                       isRecording ? stopRecording() : startRecording();
                     }}
                     className={`w-20 h-20 rounded-full flex items-center justify-center ${isRecording
-                      ? (darkMode ? 'bg-red-600' : 'bg-red-500')
-                      : (darkMode ? 'bg-blue-600' : 'bg-blue-500')}`}
+                      ? 'bg-red-600'
+                      : 'bg-blue-600'}`}
                   >
                     {isRecording ? (
                       <span className="text-white">Stop</span>
@@ -434,7 +426,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                   <textarea
                     value={textInput}
                     onChange={(e) => setTextInput(e.target.value)}
-                    className={`w-full px-3 py-2 rounded-md ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'} border`}
+                    className="w-full px-3 py-2 rounded-md bg-gray-700 text-white border-gray-600 border"
                     rows={5}
                     placeholder="Describe your database requirements..."
                   ></textarea>
@@ -443,7 +435,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                       setError(""); // Clear any existing errors
                       submitVoiceOrText(null);
                     }}
-                    className={`w-full mt-2 py-2 rounded-lg ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+                    className="w-full mt-2 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
                   >
                     {error ? "Retry" : "Submit"}
                   </button>
@@ -463,15 +455,15 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
         {step === "schema" && schema && (
           <div>
             <h3 className="font-bold mb-4">Database Schema</h3>
-            <div className={`max-h-96 overflow-y-auto mb-6 rounded-lg border ${darkMode ? 'border-gray-700' : 'border-gray-300'}`}>
-              <table className={`min-w-full divide-y ${darkMode ? 'divide-gray-700' : 'divide-gray-200'}`}>
-                <thead className={darkMode ? 'bg-gray-700' : 'bg-gray-50'}>
+            <div className="max-h-96 overflow-y-auto mb-6 rounded-lg border border-gray-700">
+              <table className="min-w-full divide-y divide-gray-700">
+                <thead className="bg-gray-700">
                   <tr>
                     <th className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider">Table</th>
                     <th className="px-3 py-2 text-left text-xs font-medium uppercase tracking-wider">Columns</th>
                   </tr>
                 </thead>
-                <tbody className={`divide-y ${darkMode ? 'divide-gray-700' : 'divide-gray-200'}`}>
+                <tbody className="divide-y divide-gray-700">
                   {Object.entries(schema).map(([tableName, columns]) => (
                     <tr key={tableName}>
                       <td className="px-3 py-2 text-sm whitespace-nowrap font-medium">{tableName}</td>
@@ -494,7 +486,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                   setError(""); // Clear any existing errors
                   editSchema();
                 }}
-                className={`px-4 py-2 rounded-lg ${darkMode ? 'bg-yellow-600 hover:bg-yellow-700' : 'bg-yellow-500 hover:bg-yellow-600'} text-white`}
+                className="px-4 py-2 rounded-lg bg-yellow-600 hover:bg-yellow-700 text-white"
               >
                 {error ? "Retry Edit" : "Edit Schema"}
               </button>
@@ -503,7 +495,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                   setError(""); // Clear any existing errors
                   confirmSchema();
                 }}
-                className={`px-4 py-2 rounded-lg ${darkMode ? 'bg-green-600 hover:bg-green-700' : 'bg-green-500 hover:bg-green-600'} text-white`}
+                className="px-4 py-2 rounded-lg bg-green-600 hover:bg-green-700 text-white"
               >
                 {error ? "Retry Confirmation" : "Confirm Schema"}
               </button>
@@ -523,8 +515,8 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                   setInputType("voice");
                 }}
                 className={`px-4 py-2 rounded-lg ${inputType === "voice"
-                  ? (darkMode ? 'bg-blue-600' : 'bg-blue-500')
-                  : (darkMode ? 'bg-gray-700' : 'bg-gray-200')}`}
+                  ? 'bg-blue-600'
+                  : 'bg-gray-700'}`}
               >
                 Voice Input
               </button>
@@ -534,8 +526,8 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                   setInputType("text");
                 }}
                 className={`px-4 py-2 rounded-lg ${inputType === "text"
-                  ? (darkMode ? 'bg-blue-600' : 'bg-blue-500')
-                  : (darkMode ? 'bg-gray-700' : 'bg-gray-200')}`}
+                  ? 'bg-blue-600'
+                  : 'bg-gray-700'}`}
               >
                 Text Input
               </button>
@@ -549,8 +541,8 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                     isRecording ? stopRecording() : startRecording();
                   }}
                   className={`w-20 h-20 rounded-full flex items-center justify-center ${isRecording
-                    ? (darkMode ? 'bg-red-600' : 'bg-red-500')
-                    : (darkMode ? 'bg-blue-600' : 'bg-blue-500')}`}
+                    ? 'bg-red-600'
+                    : 'bg-blue-600'}`}
                 >
                   {isRecording ? (
                     <span className="text-white">Stop</span>
@@ -570,13 +562,13 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
                 <textarea
                   value={textInput}
                   onChange={(e) => setTextInput(e.target.value)}
-                  className={`w-full px-3 py-2 rounded-md ${darkMode ? 'bg-gray-700 text-white border-gray-600' : 'bg-white text-gray-900 border-gray-300'} border`}
+                  className="w-full px-3 py-2 rounded-md bg-gray-700 text-white border-gray-600 border"
                   rows={5}
                   placeholder="Describe the changes needed..."
                 ></textarea>
                 <button
                   type="submit"
-                  className={`w-full mt-4 py-2 rounded-lg ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+                  className="w-full mt-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
                 >
                   {error ? "Retry Submission" : "Submit Changes"}
                 </button>
@@ -594,7 +586,7 @@ const CreateDatabaseModal = ({ darkMode, onClose }) => {
             <p className="mb-4">Your new database has been set up and is ready to use.</p>
             <button
               onClick={onClose}
-              className={`px-4 py-2 rounded-lg ${darkMode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-blue-500 hover:bg-blue-600'} text-white`}
+              className="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-700 text-white"
             >
               Close
             </button>
