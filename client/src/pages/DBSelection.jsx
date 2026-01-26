@@ -1,9 +1,8 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Navbar from '../components/Navbar';
-import CreateDatabaseModal from "../components/CreateDatabaseModal";
 import ConnectDatabaseModal from "../components/ConnectDatabaseModal";
-import { useNavigate } from 'react-router-dom';
 import VoiceSearchModal from '../components/VoiceSearchModal';
+import { useNavigate } from 'react-router-dom';
 import Loader from '../components/ui/Loader';
 import DbPreviewOption from '../components/ui/Db-preview';
 import { SiPostgresql } from 'react-icons/si';
@@ -19,8 +18,6 @@ const DatabaseDashboard = () => {
   const navigate = useNavigate();
   const [databases, setDatabases] = useState([]);
   const [showVoiceModal, setShowVoiceModal] = useState(false);
-  const [showVoiceModal1, setShowVoiceModal1] = useState(false);
-  const [showCreateModal, setShowCreateModal] = useState(false);
   const [showConnectModal, setShowConnectModal] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -28,7 +25,6 @@ const DatabaseDashboard = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const [translations, setTranslations] = useState({
     title: 'Your Databases',
-    createButton: 'Create Database',
     connectButton: 'Connect Database',
     noData: 'No databases found',
     dbName: 'Database Name',
@@ -76,37 +72,13 @@ const DatabaseDashboard = () => {
     fetchDatabases();
   }, []);
 
-  const handleCreateDatabase = () => {
-    setShowCreateModal(true);
-  };
-
   const handleConnectDatabase = () => {
     setShowConnectModal(true);
-  };
-
-
-  const handleVoiceSearch = () => {
-    // Make sure we have databases loaded before opening the modal
-    if (databases.length === 0 && !isLoading) {
-      fetchDatabases().then(() => {
-        setShowVoiceModal1(true);
-      });
-    } else {
-      setShowVoiceModal1(true);
-    }
-  };
-  const handleCloseVoiceModal = () => {
-    setShowVoiceModal1(false);
   };
   // Add database refresh on modal close to update list when new database is added or connected
   const handleModalClose = () => {
     fetchDatabases();
   };
-  const handleDatabaseFound = async (dbId) => {
-    console.log('Database found:', dbId);
-    navigateToDatabase(dbId);
-  };
-
 
   const handleDbVoiceQuery = (dbId, query) => {
     setProcessingVoice(true);
@@ -196,372 +168,6 @@ const DatabaseDashboard = () => {
     setShowVoiceModal(true);
   };
 
-  // Voice Search Modal Component
-  const VoiceSearchModal1 = ({ onClose, onDatabaseFound, databases }) => {
-    const [isListening, setIsListening] = useState(false);
-    const [transcript, setTranscript] = useState('');
-    const [message, setMessage] = useState('Click to start speaking');
-    const [matchedDbs, setMatchedDbs] = useState([]);
-    const recognitionRef = useRef(null);
-    const latestTranscriptRef = useRef(''); // Store latest transcript for use in callbacks
-
-    // Debug logging
-    useEffect(() => {
-      if (databases && databases.length > 0) {
-        console.log('Available databases:', databases.map(db => db.name));
-      }
-    }, [databases]);
-
-    useEffect(() => {
-      // Check if browser supports SpeechRecognition
-      if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
-        setMessage('Voice recognition is not supported in your browser.');
-        return;
-      }
-
-      // Initialize speech recognition
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      const recognition = new SpeechRecognition();
-
-      recognition.continuous = false;
-      recognition.interimResults = true;
-      recognition.lang = navigator.language || 'en-US';
-
-      recognition.onstart = () => {
-        setIsListening(true);
-        setMessage('Listening...');
-        setMatchedDbs([]);
-        latestTranscriptRef.current = ''; // Reset transcript reference
-      };
-
-      recognition.onresult = (event) => {
-        const current = event.resultIndex;
-        const transcriptText = event.results[current][0].transcript.trim();
-        console.log('Transcript received:', transcriptText);
-
-        // Update both state and ref
-        setTranscript(transcriptText);
-        latestTranscriptRef.current = transcriptText;
-
-        // Find potential matches as user speaks
-        if (databases && databases.length > 0) {
-          const searchText = transcriptText.toLowerCase();
-          const potentialMatches = databases.filter(db =>
-            db.name.toLowerCase().includes(searchText) ||
-            searchText.includes(db.name.toLowerCase())
-          );
-
-          console.log('Potential matches found:', potentialMatches.map(db => db.name));
-          setMatchedDbs(potentialMatches);
-        }
-      };
-
-      recognition.onend = () => {
-        setIsListening(false);
-
-        // Use the ref value instead of state to ensure we have latest transcript
-        const currentTranscript = latestTranscriptRef.current;
-        console.log("Recognition ended with transcript:", currentTranscript);
-        console.log("Current databases available:", databases);
-
-        if (currentTranscript && databases && databases.length > 0) {
-          setMessage('Processing...');
-          console.log('Processing final transcript:', currentTranscript);
-
-          // Find exact or best match with more lenient matching
-          const cleanTranscript = currentTranscript.toLowerCase().trim();
-          console.log('Cleaned transcript:', cleanTranscript);
-
-          // Try exact match first
-          const exactMatch = databases.find(db =>
-            db.name.toLowerCase() === cleanTranscript
-          );
-          console.log('Exact match result:', exactMatch);
-
-          // Try searching for the database name in the transcript
-          const includedMatch = exactMatch ? null : databases.find(db =>
-            cleanTranscript.includes(db.name.toLowerCase())
-          );
-          console.log('Included match result:', includedMatch);
-
-          // Try searching for transcript in the database name
-          const reversedMatch = (!exactMatch && !includedMatch) ? databases.find(db =>
-            db.name.toLowerCase().includes(cleanTranscript)
-          ) : null;
-          console.log('Reversed match result:', reversedMatch);
-
-          const bestMatch = exactMatch || includedMatch || reversedMatch;
-          console.log('Best match determined:', bestMatch);
-
-          if (bestMatch) {
-            console.log('Found matching database:', bestMatch.name, 'with ID:', bestMatch.id);
-            setMessage(`Found database: ${bestMatch.name}`);
-
-            // Short delay before closing modal and navigating
-            const matchId = bestMatch.id; // Store ID locally to ensure it's available in timeout
-
-            setTimeout(() => {
-              console.log('Navigation timeout triggered for ID:', matchId);
-              onClose();
-              onDatabaseFound(matchId);
-            }, 1000);
-          } else {
-            // Check for any potential matches from the latest state
-            const currentMatches = databases.filter(db =>
-              db.name.toLowerCase().includes(cleanTranscript) ||
-              cleanTranscript.includes(db.name.toLowerCase())
-            );
-
-            if (currentMatches && currentMatches.length > 0) {
-              console.log('Found similar matches:', currentMatches.map(db => `${db.name} (${db.id})`));
-              setMatchedDbs(currentMatches); // Update matched DBs state
-              setMessage(`Found ${currentMatches.length} similar matches. Click one to select.`);
-            } else {
-              console.log('No matches found for transcript:', currentTranscript);
-              console.log('Available databases:', databases ? databases.map(db => `${db.name} (${db.id})`) : 'None');
-              setMessage('No matching database found. Please try again.');
-            }
-          }
-        } else {
-          setMessage('Click to start speaking');
-        }
-      };
-
-      recognition.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
-        setIsListening(false);
-        setMessage(`Error occurred: ${event.error}`);
-      };
-
-      // Store recognition instance
-      recognitionRef.current = recognition;
-
-      // Cleanup
-      return () => {
-        if (recognitionRef.current) {
-          try {
-            recognitionRef.current.stop();
-          } catch (err) {
-            // Ignore errors when stopping recognition on cleanup
-          }
-        }
-      };
-    }, [databases, onClose, onDatabaseFound]);
-
-    // Start listening function
-    const startListening = () => {
-      setTranscript('');
-      setMatchedDbs([]);
-      latestTranscriptRef.current = '';
-
-      if (recognitionRef.current) {
-        try {
-          recognitionRef.current.start();
-        } catch (err) {
-          console.error('Failed to start recognition:', err);
-          // Recreate recognition instance if there's an error
-          resetRecognition();
-          // Try starting again
-          recognitionRef.current.start();
-        }
-      }
-    };
-
-    // Reset recognition instance
-    const resetRecognition = () => {
-      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-      recognitionRef.current = new SpeechRecognition();
-
-      // Set up event handlers again
-      recognitionRef.current.continuous = false;
-      recognitionRef.current.interimResults = true;
-      recognitionRef.current.lang = navigator.language || 'en-US';
-
-      recognitionRef.current.onstart = () => {
-        setIsListening(true);
-        setMessage('Listening...');
-        latestTranscriptRef.current = '';
-      };
-
-      recognitionRef.current.onresult = (event) => {
-        const current = event.resultIndex;
-        const transcriptText = event.results[current][0].transcript.trim();
-        console.log('Transcript received:', transcriptText);
-        setTranscript(transcriptText);
-        latestTranscriptRef.current = transcriptText;
-
-        // Find potential matches
-        if (databases && databases.length > 0) {
-          const searchText = transcriptText.toLowerCase();
-          const potentialMatches = databases.filter(db =>
-            db.name.toLowerCase().includes(searchText) ||
-            searchText.includes(db.name.toLowerCase())
-          );
-          setMatchedDbs(potentialMatches);
-        }
-      };
-
-      recognitionRef.current.onend = () => {
-        setIsListening(false);
-        const currentTranscript = latestTranscriptRef.current;
-        if (currentTranscript && databases && databases.length > 0) {
-          processTranscript(currentTranscript);
-        } else {
-          setMessage('Click to start speaking');
-        }
-      };
-
-      recognitionRef.current.onerror = (event) => {
-        console.error('Speech recognition error:', event.error);
-        setIsListening(false);
-        setMessage(`Error occurred: ${event.error}`);
-      };
-    };
-
-    const processTranscript = (currentTranscript) => {
-      if (!currentTranscript || !databases || databases.length === 0) return;
-
-      setMessage('Processing...');
-      console.log('Processing transcript:', currentTranscript);
-
-      // Find exact or best match with more lenient matching
-      const cleanTranscript = currentTranscript.toLowerCase().trim();
-
-      // Try exact match first
-      const exactMatch = databases.find(db =>
-        db.name.toLowerCase() === cleanTranscript
-      );
-
-      // Try searching for the database name in the transcript
-      const includedMatch = exactMatch ? null : databases.find(db =>
-        cleanTranscript.includes(db.name.toLowerCase())
-      );
-
-      // Try searching for transcript in the database name
-      const reversedMatch = (!exactMatch && !includedMatch) ? databases.find(db =>
-        db.name.toLowerCase().includes(cleanTranscript)
-      ) : null;
-
-      const bestMatch = exactMatch || includedMatch || reversedMatch;
-
-      if (bestMatch) {
-        console.log('Found matching database:', bestMatch.name);
-        setMessage(`Found database: ${bestMatch.name}`);
-        // Short delay before closing modal and navigating
-        setTimeout(() => {
-          onClose();
-          console.log('Navigating to database ID:', bestMatch.id);
-          onDatabaseFound(bestMatch.id);
-        }, 1000);
-      } else {
-        // Find any potential matches
-        const potentialMatches = databases.filter(db =>
-          db.name.toLowerCase().includes(cleanTranscript) ||
-          cleanTranscript.includes(db.name.toLowerCase())
-        );
-
-        if (potentialMatches.length > 0) {
-          console.log('Found similar matches:', potentialMatches.map(db => db.name));
-          setMatchedDbs(potentialMatches);
-          setMessage(`Found ${potentialMatches.length} similar matches. Click one to select.`);
-        } else {
-          console.log('No matches found for:', currentTranscript);
-          console.log('Available databases:', databases.map(db => db.name));
-          setMessage('No matching database found. Please try again.');
-        }
-      }
-    };
-
-    const stopListening = () => {
-      if (recognitionRef.current) {
-        try {
-          recognitionRef.current.stop();
-        } catch (err) {
-          console.error('Error stopping recognition:', err);
-        }
-      }
-      setIsListening(false);
-    };
-
-    const toggleListening = () => {
-      if (isListening) {
-        stopListening();
-      } else {
-        startListening();
-      }
-    };
-
-    const selectDatabase = (dbId) => {
-      const selectedDb = databases.find(db => db.id === dbId);
-      if (selectedDb) {
-        console.log('User selected database:', selectedDb.name);
-        setMessage(`Selected database: ${selectedDb.name}`);
-        setTimeout(() => {
-          onClose();
-          onDatabaseFound(dbId);
-        }, 500);
-      }
-    };
-
-    return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="rounded-lg p-6 max-w-md w-full bg-gray-800 text-white">
-          <h2 className="text-lg font-bold mb-4">{translations?.voiceSearch || 'Voice Database Search'}</h2>
-
-          <div className="flex flex-col items-center space-y-4">
-            <button
-              onClick={toggleListening}
-              className={`p-4 rounded-full ${isListening
-                ? 'bg-red-600 animate-pulse'
-                : 'bg-blue-600'
-                } text-white`}
-              aria-label={isListening ? "Stop listening" : "Start listening"}
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-              </svg>
-            </button>
-
-            <p className="text-sm">{message}</p>
-
-            {transcript && (
-              <div className="mt-4 p-3 rounded-lg w-full bg-gray-700">
-                <p className="text-sm font-medium">{translations?.youSaid || 'You said'}:</p>
-                <p className="text-md">{transcript}</p>
-              </div>
-            )}
-
-            {matchedDbs.length > 0 && (
-              <div className="mt-2 w-full text-white">
-                <p className="text-sm font-medium mb-2">{translations?.possibleMatches || 'Possible matches'}:</p>
-                <div className="max-h-40 overflow-y-auto">
-                  {matchedDbs.map(db => (
-                    <div
-                      key={db.id}
-                      onClick={() => selectDatabase(db.id)}
-                      className="p-2 mb-1 rounded cursor-pointer bg-gray-700 hover:bg-gray-600"
-                    >
-                      {db.name}
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          <div className="flex justify-end mt-6">
-            <button
-              onClick={onClose}
-              className="px-3 py-1 text-sm rounded-lg bg-gray-700 hover:bg-gray-600"
-            >
-              {translations?.cancel || 'Cancel'}
-            </button>
-          </div>
-        </div>
-      </div>
-    );
-  };
-
   return (
     <div className="flex flex-col w-screen min-h-screen bg-gray-900 text-white">
       <Navbar />
@@ -581,31 +187,6 @@ const DatabaseDashboard = () => {
             <h1 className="text-2xl font-bold">{translations.title}</h1>
 
             <div className="flex items-center space-x-3">
-              {/* Voice Search Button */}
-              <div className="relative group">
-                <button
-                  onClick={handleVoiceSearch}
-                  className="p-3 rounded-full shadow-lg transition-all duration-200 bg-purple-600 hover:bg-purple-700 hover:shadow-purple-500/30 text-white hover:shadow-xl hover:scale-105"
-                  title={translations.voiceSearch}
-                >
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 11a7 7 0 01-7 7m0 0a7 7 0 01-7-7m7 7v4m0 0H8m4 0h4m-4-8a3 3 0 01-3-3V5a3 3 0 116 0v6a3 3 0 01-3 3z" />
-                  </svg>
-                </button>
-
-                <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-1 text-sm rounded-lg whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 bg-gray-700 text-white">
-                  Select database to query
-                  <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-l-transparent border-r-transparent border-t-gray-700"></div>
-                </div>
-              </div>
-
-              <button
-                onClick={handleCreateDatabase}
-                className="px-4 py-2 rounded-lg font-medium shadow-lg transition-all duration-200 bg-blue-600 hover:bg-blue-700 hover:shadow-blue-500/30 text-white hover:shadow-xl hover:scale-105"
-              >
-                {translations.createButton}
-              </button>
-
               <button
                 onClick={handleConnectDatabase}
                 className="px-4 py-2 rounded-lg font-medium shadow-lg transition-all duration-200 bg-green-600 hover:bg-green-700 hover:shadow-green-500/30 text-white hover:shadow-xl hover:scale-105"
@@ -776,30 +357,12 @@ const DatabaseDashboard = () => {
         </div>
       )}
 
-      {showCreateModal && (
-        <CreateDatabaseModal
-          onClose={() => {
-            setShowCreateModal(false);
-            handleModalClose();
-          }}
-        />
-      )}
-
       {showConnectModal && (
         <ConnectDatabaseModal
           onClose={() => {
             setShowConnectModal(false);
             handleModalClose();
           }}
-        />
-      )}
-
-      {showVoiceModal1 && (
-        <VoiceSearchModal1
-          onClose={handleCloseVoiceModal}
-          onDatabaseFound={handleDatabaseFound}
-          databases={databases}
-          translations={translations}
         />
       )}
 
