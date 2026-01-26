@@ -5,7 +5,7 @@ import sequelize from '../config/Database.config.js'; // your pg client instance
 
 
 import { getDatabaseSchema } from "./Query.controller.js"; // Adjust path as needed
-import { callGeminiAPI } from "./Query.controller.js"; // Ensure it's exported
+import { callGroqAPI } from "./Query.controller.js"; // Ensure it's exported
 import { differenceInDays } from "date-fns"; // If not already imported
 
 // Create a new database entry
@@ -308,10 +308,10 @@ export const getDatabaseInfo = async (req, res) => {
     );
     const tables = tableResult.map(row => row.table_name);
 
-    // ✅ Get database schema for Gemini recommendation
+    // ✅ Get database schema for Groq recommendation
     const schema = await getDatabaseSchema(id);
 
-    // ✨ Gemini prompt for recommended questions
+    // ✨ Groq prompt for recommended questions
     const recommendationPrompt = `
     Based on the following PostgreSQL database schema:
     ${JSON.stringify(schema)}
@@ -335,7 +335,7 @@ export const getDatabaseInfo = async (req, res) => {
     ["Question 1", "Question 2", ...]
     `;
 
-    const recommendationResponse = await callGeminiAPI(recommendationPrompt);
+    const recommendationResponse = await callGroqAPI(recommendationPrompt);
     let recommendedQuestions = [];
 
     try {
@@ -344,7 +344,7 @@ export const getDatabaseInfo = async (req, res) => {
         recommendedQuestions = JSON.parse(jsonMatch[0]);
       }
     } catch (err) {
-      console.warn("⚠️ Failed to parse Gemini recommendations:", err.message);
+      console.warn("⚠️ Failed to parse Groq recommendations:", err.message);
     }
 
     const dbInfo = {

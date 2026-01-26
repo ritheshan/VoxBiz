@@ -1,7 +1,7 @@
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import Groq from 'groq-sdk';
 
-console.log(process.env.GEMINI_API_KEY);
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+console.log(process.env.GROQ_API_KEY);
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 export const handleBusinessChat = async (req, res) => {
   try {
@@ -11,53 +11,37 @@ export const handleBusinessChat = async (req, res) => {
       return res.status(400).json({ error: "Message is required" });
     }
 
-    const modelName = screenshot ? "gemini-1.5-pro-vision" : "gemini-1.5-flash";
-    const model = genAI.getGenerativeModel({ model: modelName });
+    const modelName = "llama-3.3-70b-versatile";
 
-    const parts = [];
+    let messageContent = "";
 
     if (systemPrompt) {
       let enhancedSystemPrompt = systemPrompt;
       if (currentVisualization) {
         enhancedSystemPrompt += `\n\nThe user is currently viewing a ${currentVisualization} visualization. Please consider this when responding.`;
       }
-      parts.push({ text: enhancedSystemPrompt });
+      messageContent += enhancedSystemPrompt + "\n\n";
     }
 
-    parts.push({ text: `User: ${userMessage}` });
+    messageContent += `User: ${userMessage}`;
 
     if (screenshot) {
-      const base64Data = screenshot.replace(/^data:image\/[^;]+;base64,/, '');
-      parts.push({
-        inlineData: {
-          data: base64Data,
-          mimeType: "image/png"
-        }
-      });
-      parts.push({ text: "The above image is a screenshot of the current data visualization the user is referring to." });
+      // Note: Groq doesn't support image input directly, so we'll mention that an image was provided
+      messageContent += "\n\n[Note: User has shared a screenshot of their current data visualization]";
     }
 
-    const result = await model.generateContent({
-      contents: [{ role: "user", parts }],
-      generationConfig: {
-        temperature: 0.7,
-        topK: 40,
-        topP: 0.95,
-        maxOutputTokens: 2048,
-      },
-      safetySettings: [
-        { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-        { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-        { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-        { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-      ]
+    const result = await groq.chat.completions.create({
+      messages: [{ role: "user", content: messageContent }],
+      model: modelName,
+      temperature: 0.7,
+      top_p: 0.95,
+      max_tokens: 2048,
     });
 
-    const response = result.response;
-    const botResponse = response.text();
+    const botResponse = result.choices[0]?.message?.content || "";
 
     if (!botResponse) {
-      return res.status(500).json({ error: "No valid response from Gemini" });
+      return res.status(500).json({ error: "No valid response from Groq" });
     }
 
     res.json({

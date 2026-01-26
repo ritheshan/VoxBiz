@@ -1,8 +1,8 @@
 import Database from "../models/Database.model.js";
-import { GoogleGenerativeAI } from '@google/generative-ai';
+import Groq from 'groq-sdk';
 import { getDatabaseSchema } from "./Query.controller.js"; // Assuming this is exported
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
 
 /**
  * Get natural language descriptions of all databases for the current user
@@ -99,11 +99,11 @@ Rules:
 }
 `;
 
-    const geminiResponse = await callGeminiAPI(prompt);
+    const groqResponse = await callGroqAPI(prompt);
 
     let naturalDescription;
     try {
-      const jsonMatch = geminiResponse.match(/\{[\s\S]*\}/);
+      const jsonMatch = groqResponse.match(/\{[\s\S]*\}/);
       naturalDescription = jsonMatch ? JSON.parse(jsonMatch[0]) : null;
 
       if (!naturalDescription) {
@@ -129,8 +129,8 @@ Rules:
       hasSchema: true
     });
 
-    // ✅ Wait 1.6 seconds before next Gemini call to avoid 429 rate limit
-    await new Promise(resolve => setTimeout(resolve, 1600));
+    // ✅ Wait 1 second before next Groq call to avoid rate limit
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
   } catch (error) {
     console.error(`Error processing database ${database.id}:`, error);
@@ -166,25 +166,21 @@ Rules:
       });
     }
   };
-  async function callGeminiAPI(prompt) {
+  async function callGroqAPI(prompt) {
     try {
-      const modelName = "gemini-2.0-flash";
-      // const modelName = "gemini-pro"; // instead of gemini-1.5-flash
-      const model = genAI.getGenerativeModel({ model: modelName });
+      const modelName = "llama-3.3-70b-versatile";
       
-      const result = await model.generateContent({
-        contents: [{ role: "user", parts: [{ text: prompt }] }],
-        generationConfig: {
-          temperature: 0.7,
-          topK: 40,
-          topP: 0.95,
-          maxOutputTokens: 2048,
-        },
+      const result = await groq.chat.completions.create({
+        messages: [{ role: "user", content: prompt }],
+        model: modelName,
+        temperature: 0.7,
+        top_p: 0.95,
+        max_tokens: 2048,
       });
       
-      return result.response.text();
+      return result.choices[0]?.message?.content || "";
     } catch (error) {
-      console.error("Gemini API error:", error);
-      throw new Error("Failed to generate mappings with Gemini API");
+      console.error("Groq API error:", error);
+      throw new Error("Failed to generate response with Groq API");
     }
   }
