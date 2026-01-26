@@ -100,11 +100,14 @@ const login = async (req, res) => {
   }
 };
 const logout = (req, res) => {
+  const isProduction = process.env.NODE_ENV === "production";
+
   res.clearCookie("token", {
     httpOnly: true,
-    secure: false,        // ✅ Set to true in production (HTTPS)
-    sameSite: "Lax",      // Match this with your login cookie config
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "lax",
   });
+
   return res.status(200).json({ message: "Logout successful" });
 };
 

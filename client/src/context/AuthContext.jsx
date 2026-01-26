@@ -1,5 +1,7 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { API_BASE_URL } from "../lib/api";
+import { signOut, onAuthStateChanged } from "firebase/auth";
+import { auth } from "../lib/firebase";
 
 const AuthContext = createContext();
 
@@ -55,19 +57,29 @@ export const AuthProvider = ({ children }) => {
   };
   
 
-  const logout = async () => {
-    try {
-  await fetch(`${API_BASE_URL}/api/auth/logout`, {
-        method: "POST",
-        credentials: "include",
-      });
-    } finally {
-      setUser(null);
-      setIsAuthenticated(false);
-    }
-  };
+const logout = async () => {
+  try {
+    // 🔥 1. Logout from Firebase (Google)
+    await signOut(auth);
+
+    // 🔐 2. Logout from backend (cookie)
+    await fetch(`${API_BASE_URL}/api/auth/logout`, {
+      method: "POST",
+      credentials: "include",
+    });
+  } catch (err) {
+    console.error("Logout error:", err);
+  } finally {
+    // 🧹 3. Clear app state
+    setUser(null);
+    setIsAuthenticated(false);
+  }
+};
 
   useEffect(() => {
+    onAuthStateChanged(auth, (user) => {
+    console.log("Firebase auth user:", user);
+  });
     checkAuth();
   }, []);
 
